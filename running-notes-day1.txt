@@ -1054,3 +1054,314 @@ gcr.io/google_containers/hpa-example                             latest         
 
 /c/Users/Dell lap/docker-workshop/us-mar11/alap>
 
+
+------------------------------------------------------------------------------
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container ls -a| grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS                     PORTS                                                                NAMES
+c7fed0a43e5d        alap:1                                                           "/bin/sh"                2 minutes ago       Exited (0) 2 minutes ago                                                                        tender_sammet
+e93078582dcd        nginx-ping                                                       "nginx -g 'daemon ..."   3 hours ago         Up 3 hours                 0.0.0.0:8080->80/tcp                                                 elastic_babbage
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run -it alap:1 sh
+/ # exit
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run  alap:1 ping google.com   PING google.com (172.217.167.142): 56 data bytes
+64 bytes from 172.217.167.142: seq=0 ttl=53 time=41.631 ms
+64 bytes from 172.217.167.142: seq=1 ttl=53 time=34.564 ms
+64 bytes from 172.217.167.142: seq=2 ttl=53 time=63.645 ms
+^C
+--- google.com ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 34.564/46.613/63.645 ms
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run -d alap:1 ping google.com
+653cd2c8c174daa447c227333bf1bcdfe50a2969eb62c7cc9d9d4127bb77d324
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container ls | grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS              PORTS                                                                NAMES
+653cd2c8c174        alap:1                                                           "ping google.com"        8 seconds ago       Up 6 seconds                                                                             pedantic_yalow
+e93078582dcd        nginx-ping                                                       "nginx -g 'daemon ..."   4 hours ago         Up 3 hours          0.0.0.0:8080->80/tcp                                                 elastic_babbage
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container rm -f 653cd2c8c174 e93078582dcd
+653cd2c8c174
+e93078582dcd
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> ping google.com
+PING google.com (172.217.167.142): 56 data bytes
+64 bytes from 172.217.167.142: seq=0 ttl=54 time=35.937 ms
+64 bytes from 172.217.167.142: seq=1 ttl=54 time=46.681 ms
+64 bytes from 172.217.167.142: seq=2 ttl=54 time=185.056 ms
+64 bytes from 172.217.167.142: seq=3 ttl=54 time=36.281 ms
+64 bytes from 172.217.167.142: seq=4 ttl=54 time=35.304 ms
+64 bytes from 172.217.167.142: seq=5 ttl=54 time=39.056 ms
+64 bytes from 172.217.167.142: seq=6 ttl=54 time=37.075 ms
+64 bytes from 172.217.167.142: seq=7 ttl=54 time=37.617 ms
+^C
+--- google.com ping statistics ---
+8 packets transmitted, 8 packets received, 0% packet loss
+round-trip min/avg/max = 35.304/56.625/185.056 ms
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run -d alap:1  ping google.com
+c6418e3d7f3e3bc6c9b74674b9f4935cd173e3a90b441d5de9643f024c6f1be6
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container ls | grep -v k8s              CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS              PORTS                                                                NAMES
+c6418e3d7f3e        alap:1                                                           "ping google.com"        10 seconds ago      Up 9 seconds                                                                             dreamy_keller
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container exec -it c6418e3d7f3e sh
+/ # ps -ef
+PID   USER     TIME  COMMAND
+    1 root      0:00 ping google.com
+    6 root      0:00 sh
+   10 root      0:00 ps -ef
+/ # kill -9 1
+/ # ps -ef
+PID   USER     TIME  COMMAND
+    1 root      0:00 ping google.com
+    6 root      0:00 sh
+   11 root      0:00 ps -ef
+/ # exit
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container exec -it c6418e3d7f3e sh
+/ # ps -ef
+PID   USER     TIME  COMMAND
+    1 root      0:00 ping google.com
+   12 root      0:00 sh
+   17 root      0:00 ps -ef
+/ # httpd
+AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using 172.17.0.14. Set the 'ServerName' directive globally to suppress this message
+/ # ps -ef
+PID   USER     TIME  COMMAND
+    1 root      0:00 ping google.com
+   12 root      0:00 sh
+   19 root      0:00 httpd
+   20 apache    0:00 httpd
+   21 apache    0:00 httpd
+   22 apache    0:00 httpd
+   23 apache    0:00 httpd
+   24 apache    0:00 httpd
+   25 root      0:00 ps -ef
+/ # kill -9 19 20 21 22 23 24
+/ # ps -ef
+PID   USER     TIME  COMMAND
+    1 root      0:00 ping google.com
+   12 root      0:00 sh
+   26 root      0:00 ps -ef
+/ # httpd -D FOREGROUND
+AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using 172.17.0.14. Set the 'ServerName' directive globally to suppress this message
+^C/ # exit
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container ls | grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS              PORTS                                                                NAMES
+c6418e3d7f3e        alap:1                                                           "ping google.com"        6 minutes ago       Up 6 minutes                                                                             dreamy_keller
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container rm -f c6418e3d7f3e
+c6418e3d7f3e
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run -d alap:1 httpd -D FOREGROUND
+b08f158828d6c69bd37d3ed75b755f6d6ea5caaeff1054d0d69f09ebc151d342
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container ls | grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS              PORTS                                                                NAMES
+b08f158828d6        alap:1                                                           "httpd -D FOREGROUND"    7 seconds ago       Up 6 seconds                                                                             amazing_swirles
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container exec -it b08f158828d6 sh
+/ # ps
+PID   USER     TIME  COMMAND
+    1 root      0:00 httpd -D FOREGROUND
+    7 apache    0:00 httpd -D FOREGROUND
+    8 apache    0:00 httpd -D FOREGROUND
+    9 apache    0:00 httpd -D FOREGROUND
+   10 apache    0:00 httpd -D FOREGROUND
+   11 apache    0:00 httpd -D FOREGROUND
+   12 root      0:00 sh
+   17 root      0:00 ps
+/ # exit
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run -d nginx
+b4533953c346a6e9684a5c9286cc319793380047e5b9191650078d3177d76372
+d
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container ls | grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS              PORTS                                                                NAMES
+b4533953c346        nginx                                                            "nginx -g 'daemon ..."   10 seconds ago      Up 9 seconds        80/tcp                                                               thirsty_snyder
+b08f158828d6        alap:1                                                           "httpd -D FOREGROUND"    2 minutes ago       Up 2 minutes                                                                             amazing_swirles
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> #docker container run -d alap:1 httpd -D FOREGROUND
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> ps -ef | grep "httpd -D FOREGROUND"
+root     27848 27828  0 21:51 ?        00:00:00 httpd -D FOREGROUND
+100      27916 27848  0 21:51 ?        00:00:00 httpd -D FOREGROUND
+100      27920 27848  0 21:51 ?        00:00:00 httpd -D FOREGROUND
+100      27922 27848  0 21:51 ?        00:00:00 httpd -D FOREGROUND
+100      27923 27848  0 21:51 ?        00:00:00 httpd -D FOREGROUND
+100      27925 27848  0 21:51 ?        00:00:00 httpd -D FOREGROUND
+docker   29003   661  0 21:56 pts/0    00:00:00 grep httpd -D FOREGROUND
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> ps -ef | grep 27828
+root     27828 20441  0 21:51 ?        00:00:00 docker-containerd-shim b08f158828d6c69bd37d3ed75b755f6d6ea5caaeff1054d0d69f09ebc151d342 /var/run/docker/libcontainerd/b08f158828d6c69bd37d3ed75b755f6d6ea5caaeff1054d0d69f09ebc151d342 docker-runc
+root     27848 27828  0 21:51 ?        00:00:00 httpd -D FOREGROUND
+docker   29526   661  0 21:59 pts/0    00:00:00 grep 27828
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container ls | grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS              PORTS                                                                NAMES
+b4533953c346        nginx                                                            "nginx -g 'daemon ..."   7 minutes ago       Up 7 minutes        80/tcp                                                               thirsty_snyder
+b08f158828d6        alap:1                                                           "httpd -D FOREGROUND"    9 minutes ago       Up 9 minutes                                                                             amazing_swirles
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> ps -ef | grep 20441
+root     20441 20434  0 15:42 ?        00:00:31 docker-containerd -l unix:///var/run/docker/libcontainerd/docker-containerd.sock --metrics-interval=0 --start-timeout 2m --state-dir /var/run/docker/libcontainerd/containerd --shim docker-containerd-shim --runtime docker-runc
+root     20990 20441  0 15:42 ?        00:00:00 docker-containerd-shim 79d2207517b292ae97af01ab60564e819c7c8e8a6b7f05b44fdd9d7ab05e81fc /var/run/docker/libcontainerd/79d2207517b292ae97af01ab60564e819c7c8e8a6b7f05b44fdd9d7ab05e81fc docker-runc
+root     21076 20441  0 15:42 ?        00:00:00 docker-containerd-shim d51ecfc2c14598ce773452d6fb855bb511f9f9b32d1b495d73e1ce941b9aeae5 /var/run/docker/libcontainerd/d51ecfc2c14598ce773452d6fb855bb511f9f9b32d1b495d73e1ce941b9aeae5 docker-runc
+root     21146 20441  0 15:42 ?        00:00:00 docker-containerd-shim 99275a2ae9b3011f1bc233bdb61de6f8fa74a501d750cdb4823f66e014ce4eeb /var/run/docker/libcontainerd/99275a2ae9b3011f1bc233bdb61de6f8fa74a501d750cdb4823f66e014ce4eeb docker-runc
+root     21282 20441  0 15:42 ?        00:00:00 docker-containerd-shim edf033569fe6653cb0d2555dd6cf4d681ed68304151f9533b215bb69ff6d7101 /var/run/docker/libcontainerd/edf033569fe6653cb0d2555dd6cf4d681ed68304151f9533b215bb69ff6d7101 docker-runc
+root     21323 20441  0 15:42 ?        00:00:00 docker-containerd-shim 85648dac721c03905c1dd8c1e3ff2a7f5986da77ff9d2358fc197df222729a77 /var/run/docker/libcontainerd/85648dac721c03905c1dd8c1e3ff2a7f5986da77ff9d2358fc197df222729a77 docker-runc
+root     21456 20441  0 15:42 ?        00:00:00 docker-containerd-shim 3722e78917b405fa1330e2ab5ce45b5809866562ea141d2ae583ff9a8e90aa1c /var/run/docker/libcontainerd/3722e78917b405fa1330e2ab5ce45b5809866562ea141d2ae583ff9a8e90aa1c docker-runc
+root     21616 20441  0 15:42 ?        00:00:00 docker-containerd-shim e0f1c6a67a4b0b98ba9f3fdfb809778d622be880fc01913d61dca2136b45aa2d /var/run/docker/libcontainerd/e0f1c6a67a4b0b98ba9f3fdfb809778d622be880fc01913d61dca2136b45aa2d docker-runc
+root     21637 20441  0 15:42 ?        00:00:00 docker-containerd-shim 7d6f1350daf588ede165d76e1ee7d62598c7b202ed6d77628bf6542bd793f00d /var/run/docker/libcontainerd/7d6f1350daf588ede165d76e1ee7d62598c7b202ed6d77628bf6542bd793f00d docker-runc
+root     21746 20441  0 15:42 ?        00:00:00 docker-containerd-shim c4bff90d5ba767b2a7577b7a85a163b9c021187865006af39ae15a712b1248a8 /var/run/docker/libcontainerd/c4bff90d5ba767b2a7577b7a85a163b9c021187865006af39ae15a712b1248a8 docker-runc
+root     21756 20441  0 15:42 ?        00:00:00 docker-containerd-shim 1b7d7dddc8e36b8fa992756e161dec0d3ad98461deebed69dc6c2a251d8ce4d3 /var/run/docker/libcontainerd/1b7d7dddc8e36b8fa992756e161dec0d3ad98461deebed69dc6c2a251d8ce4d3 docker-runc
+root     21838 20441  0 15:42 ?        00:00:00 docker-containerd-shim a34793171a9c85eeccccde2b8cf5af20d1eaef38cb1e81e2912feb3d28a9842f /var/run/docker/libcontainerd/a34793171a9c85eeccccde2b8cf5af20d1eaef38cb1e81e2912feb3d28a9842f docker-runc
+root     21853 20441  0 15:42 ?        00:00:00 docker-containerd-shim 25ee49e8b7c4e7566b0a5627da957c2bbe24db82290798f5cf90dfa4c36d0e5d /var/run/docker/libcontainerd/25ee49e8b7c4e7566b0a5627da957c2bbe24db82290798f5cf90dfa4c36d0e5d docker-runc
+root     21916 20441  0 15:42 ?        00:00:00 docker-containerd-shim ee12ddcc7479b8cf5ff9b85c9a697dd0d736d17a188cc95e0b82eb51e46c06e5 /var/run/docker/libcontainerd/ee12ddcc7479b8cf5ff9b85c9a697dd0d736d17a188cc95e0b82eb51e46c06e5 docker-runc
+root     22296 20441  0 15:42 ?        00:00:00 docker-containerd-shim 303a20988d2ddc6651ad2aee6b547e2451645d4241fcdeabed35ea9d34d045ae /var/run/docker/libcontainerd/303a20988d2ddc6651ad2aee6b547e2451645d4241fcdeabed35ea9d34d045ae docker-runc
+root     22366 20441  0 15:42 ?        00:00:00 docker-containerd-shim 4118d9da9bc7c903ebc0e1fbce220a0a9506017ba56ae63b8ca1c46ddb246a62 /var/run/docker/libcontainerd/4118d9da9bc7c903ebc0e1fbce220a0a9506017ba56ae63b8ca1c46ddb246a62 docker-runc
+root     22423 20441  0 15:42 ?        00:00:01 docker-containerd-shim 80fc34e7642eca52817d34e56202924edc51fc90125f3f7b7ca6354f13b8bde0 /var/run/docker/libcontainerd/80fc34e7642eca52817d34e56202924edc51fc90125f3f7b7ca6354f13b8bde0 docker-runc
+root     22448 20441  0 15:42 ?        00:00:00 docker-containerd-shim c009faf7daba15be00b6eb40912545330b471364adf211fc3aab1126c68030f8 /var/run/docker/libcontainerd/c009faf7daba15be00b6eb40912545330b471364adf211fc3aab1126c68030f8 docker-runc
+root     22473 20441  0 15:42 ?        00:00:00 docker-containerd-shim f65c432554593b1f512128ac390aeb4b7c9245eaa12b98a01ddfbd52094e079c /var/run/docker/libcontainerd/f65c432554593b1f512128ac390aeb4b7c9245eaa12b98a01ddfbd52094e079c docker-runc
+root     22685 20441  0 15:42 ?        00:00:00 docker-containerd-shim 0d68282563c32c512f85a5914cb9c177488f83e816263800969f5de48493796e /var/run/docker/libcontainerd/0d68282563c32c512f85a5914cb9c177488f83e816263800969f5de48493796e docker-runc
+root     22716 20441  0 15:42 ?        00:00:00 docker-containerd-shim 58a5da9eca76f47c7ec00ff9cb7752f9cbf73b7d4b70b78ab0e413052e9aaacc /var/run/docker/libcontainerd/58a5da9eca76f47c7ec00ff9cb7752f9cbf73b7d4b70b78ab0e413052e9aaacc docker-runc
+root     23050 20441  0 15:42 ?        00:00:00 docker-containerd-shim 45ac916af4b6af7922b09831f18e871b05c74eb2592e80f65e1586585660bbc6 /var/run/docker/libcontainerd/45ac916af4b6af7922b09831f18e871b05c74eb2592e80f65e1586585660bbc6 docker-runc
+root     23939 20441  0 15:43 ?        00:00:00 docker-containerd-shim a93c6b4c13f26c27d11e205caa8a11fda07770822c96589f567f6898bdaceda3 /var/run/docker/libcontainerd/a93c6b4c13f26c27d11e205caa8a11fda07770822c96589f567f6898bdaceda3 docker-runc
+root     24025 20441  0 15:43 ?        00:00:00 docker-containerd-shim 9dd7b48c5208c0335cc3a9b7059f1e857389b9c1ee5ff52c47510168190e2ba3 /var/run/docker/libcontainerd/9dd7b48c5208c0335cc3a9b7059f1e857389b9c1ee5ff52c47510168190e2ba3 docker-runc
+root     24096 20441  0 15:43 ?        00:00:00 docker-containerd-shim a789f7682d159e89f22ef21ef552c37e3337616d92f5b81248801956d6fc1333 /var/run/docker/libcontainerd/a789f7682d159e89f22ef21ef552c37e3337616d92f5b81248801956d6fc1333 docker-runc
+root     24145 20441  0 15:43 ?        00:00:02 docker-containerd-shim c2dfe50a8a25f702159a38d124177f97d551ff769edbe50327566749c6fa4f4d /var/run/docker/libcontainerd/c2dfe50a8a25f702159a38d124177f97d551ff769edbe50327566749c6fa4f4d docker-runc
+root     24238 20441  0 15:43 ?        00:00:00 docker-containerd-shim b528fe75089cc536dcc53cb631b8dc878142b4cdbac95c4f2b8e2b41d3935837 /var/run/docker/libcontainerd/b528fe75089cc536dcc53cb631b8dc878142b4cdbac95c4f2b8e2b41d3935837 docker-runc
+root     24328 20441  0 15:43 ?        00:00:00 docker-containerd-shim 66bf42ca6a13b4415520c474f45a118d0faad675d4584f81de2d4ae1c446e546 /var/run/docker/libcontainerd/66bf42ca6a13b4415520c474f45a118d0faad675d4584f81de2d4ae1c446e546 docker-runc
+root     24335 20441  0 15:43 ?        00:00:00 docker-containerd-shim 05381aca4257bd9907bc8d81343d62b9edab059fbf91d2f8dd025d3362263f5a /var/run/docker/libcontainerd/05381aca4257bd9907bc8d81343d62b9edab059fbf91d2f8dd025d3362263f5a docker-runc
+root     24343 20441  0 15:43 ?        00:00:00 docker-containerd-shim b5b3205f8a2289aee104eb2febe22cb0ce11cc2a6cd670329c5c838bf1f57ca9 /var/run/docker/libcontainerd/b5b3205f8a2289aee104eb2febe22cb0ce11cc2a6cd670329c5c838bf1f57ca9 docker-runc
+root     27828 20441  0 21:51 ?        00:00:00 docker-containerd-shim b08f158828d6c69bd37d3ed75b755f6d6ea5caaeff1054d0d69f09ebc151d342 /var/run/docker/libcontainerd/b08f158828d6c69bd37d3ed75b755f6d6ea5caaeff1054d0d69f09ebc151d342 docker-runc
+root     28350 20441  0 21:53 ?        00:00:00 docker-containerd-shim b4533953c346a6e9684a5c9286cc319793380047e5b9191650078d3177d76372 /var/run/docker/libcontainerd/b4533953c346a6e9684a5c9286cc319793380047e5b9191650078d3177d76372 docker-runc
+docker   30058   661  0 22:02 pts/0    00:00:00 grep 20441
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> ps -ef | grep 20434
+root     20434     1  6 15:42 ?        00:25:05 /usr/bin/dockerd -H tcp://0.0.0.0:2376 -H unix:///var/run/docker.sock --tlsverify --tlscacert /etc/docker/ca.pem --tlscert /etc/docker/server.pem --tlskey /etc/docker/server-key.pem --label provider=virtualbox --insecure-registry 10.96.0.0/12
+root     20441 20434  0 15:42 ?        00:00:31 docker-containerd -l unix:///var/run/docker/libcontainerd/docker-containerd.sock --metrics-interval=0 --start-timeout 2m --state-dir /var/run/docker/libcontainerd/containerd --shim docker-containerd-shim --runtime docker-runc
+root     21697 20434  0 15:42 ?        00:00:00 /usr/bin/docker-proxy -proto tcp -host-ip 0.0.0.0 -host-port 18080 -container-ip 172.17.0.8 -container-port 18080
+root     21955 20434  0 15:42 ?        00:00:00 /usr/bin/docker-proxy -proto tcp -host-ip 0.0.0.0 -host-port 443 -container-ip 172.17.0.8 -container-port 443
+root     22183 20434  0 15:42 ?        00:00:00 /usr/bin/docker-proxy -proto tcp -host-ip 0.0.0.0 -host-port 80 -container-ip 172.17.0.8 -container-port 80
+docker   30336   661  0 22:04 pts/0    00:00:00 grep 20434
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container ls | grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS              PORTS                                                                NAMES
+b4533953c346        nginx                                                            "nginx -g 'daemon ..."   12 minutes ago      Up 12 minutes       80/tcp                                                               thirsty_snyder
+b08f158828d6        alap:1                                                           "httpd -D FOREGROUND"    14 minutes ago      Up 14 minutes                                                                            amazing_swirles
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> sudo kill -9 27848
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container ls | grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS              PORTS                                                                NAMES
+b4533953c346        nginx                                                            "nginx -g 'daemon ..."   13 minutes ago      Up 13 minutes       80/tcp                                                               thirsty_snyder
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image build -t alap:2 -t alap:latest .
+Sending build context to Docker daemon  2.048kB
+Step 1/4 : FROM alpine
+ ---> 5cb3aa00f899
+Step 2/4 : RUN apk update
+ ---> Using cache
+ ---> 7a300c62ae3a
+Step 3/4 : RUN apk add apache2
+ ---> Using cache
+ ---> b6bc0e5e77fe
+Step 4/4 : CMD httpd -D FOREGROUND
+ ---> Running in ce6203a5e648
+ ---> 6f5f73868b74
+Removing intermediate container ce6203a5e648
+Successfully built 6f5f73868b74
+Successfully tagged alap:2
+Successfully tagged alap:latest
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image history alap:2
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+6f5f73868b74        16 seconds ago      /bin/sh -c #(nop)  CMD ["httpd" "-D" "FORE...   0B      
+b6bc0e5e77fe        2 hours ago         /bin/sh -c apk add apache2                      3.59MB  
+7a300c62ae3a        2 hours ago         /bin/sh -c apk update                           1.31MB  
+5cb3aa00f899        4 days ago          /bin/sh -c #(nop)  CMD ["/bin/sh"]              0B      
+<missing>           4 days ago          /bin/sh -c #(nop) ADD file:88875982b0512a9...   5.53MB  
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image history alap:1
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+b6bc0e5e77fe        2 hours ago         /bin/sh -c apk add apache2                      3.59MB  
+7a300c62ae3a        2 hours ago         /bin/sh -c apk update                           1.31MB  
+5cb3aa00f899        4 days ago          /bin/sh -c #(nop)  CMD ["/bin/sh"]              0B      
+<missing>           4 days ago          /bin/sh -c #(nop) ADD file:88875982b0512a9...   5.53MB  
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image history alap:2
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+6f5f73868b74        50 seconds ago      /bin/sh -c #(nop)  CMD ["httpd" "-D" "FORE...   0B      
+b6bc0e5e77fe        2 hours ago         /bin/sh -c apk add apache2                      3.59MB  
+7a300c62ae3a        2 hours ago         /bin/sh -c apk update                           1.31MB  
+5cb3aa00f899        4 days ago          /bin/sh -c #(nop)  CMD ["/bin/sh"]              0B      
+<missing>           4 days ago          /bin/sh -c #(nop) ADD file:88875982b0512a9...   5.53MB  
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run -d -p9090:80 alap:2
+043aab57cd816f7a18063dac814c6e3de54eb97df28471db88ee3608b5c99fd2
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container ls | grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS              PORTS                                                                NAMES
+043aab57cd81        alap:2                                                           "httpd -D FOREGROUND"    9 seconds ago       Up 8 seconds        0.0.0.0:9090->80/tcp                                                 eloquent_rosalind
+b4533953c346        nginx                                                            "nginx -g 'daemon ..."   24 minutes ago      Up 24 minutes       80/tcp                                                               thirsty_snyder
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image build -t alap:2 -t alap:latest
+"docker image build" requires exactly 1 argument.
+See 'docker image build --help'.
+
+Usage:  docker image build [OPTIONS] PATH | URL | -
+
+Build an image from a Dockerfile
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image build -t alap:2 -t alap:latest .
+Sending build context to Docker daemon  2.048kB
+Step 1/4 : FROM alpine
+ ---> 5cb3aa00f899
+Step 2/4 : RUN apk update
+ ---> Using cache
+ ---> 7a300c62ae3a
+Step 3/4 : RUN apk add apache2
+ ---> Using cache
+ ---> b6bc0e5e77fe
+Step 4/4 : CMD httpd -D FOREGROUND
+ ---> Using cache
+ ---> 6f5f73868b74
+Successfully built 6f5f73868b74
+Successfully tagged alap:2
+Successfully tagged alap:latest
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> cd ..
+
+/c/Users/Dell lap/docker-workshop/us-mar11> docker image build -t alap:2 -t alap:latest alap
+Sending build context to Docker daemon  2.048kB
+Step 1/4 : FROM alpine
+ ---> 5cb3aa00f899
+Step 2/4 : RUN apk update
+ ---> Using cache
+ ---> 7a300c62ae3a
+Step 3/4 : RUN apk add apache2
+ ---> Using cache
+ ---> b6bc0e5e77fe
+Step 4/4 : CMD httpd -D FOREGROUND
+ ---> Using cache
+ ---> 6f5f73868b74
+Successfully built 6f5f73868b74
+Successfully tagged alap:2
+Successfully tagged alap:latest
+
+/c/Users/Dell lap/docker-workshop/us-mar11>

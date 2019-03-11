@@ -850,3 +850,207 @@ rtt min/avg/max/mdev = 39.324/40.887/42.420/1.180 ms
 
 /home/docker>
 
+
+-----------------------------------------------------------
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> cat Dockerfile
+FROM alpine
+RUN apk update
+RUN apk add apache2
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image ls alpine
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+alpine              latest              5cb3aa00f899        3 days ago          5.53MB
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image ls alap
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+alap                1                   43f65bff8c44        5 minutes ago       10.4MB
+alap                latest              43f65bff8c44        5 minutes ago       10.4MB
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image ls | grep 8914f7eb5659
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image ls -a| grep 8914f7eb5659
+<none>                                                           <none>              8914f7eb5659        6 minutes ago       6.84MB
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image build -f Dockerfile -t alap:1 -t alap:latest .
+Sending build context to Docker daemon  2.048kB
+Step 1/3 : FROM alpine
+ ---> 5cb3aa00f899
+Step 2/3 : RUN apk update
+ ---> Using cache
+ ---> 8914f7eb5659
+Step 3/3 : RUN apk add apache2
+ ---> Using cache
+ ---> 43f65bff8c44
+Successfully built 43f65bff8c44
+Successfully tagged alap:1
+Successfully tagged alap:latest
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image build --no-cache -f Dockerfile -t alap:1 -t alap:latest .
+Sending build context to Docker daemon  2.048kB
+Step 1/3 : FROM alpine
+ ---> 5cb3aa00f899
+Step 2/3 : RUN apk update
+ ---> Running in 9ebd6f932e91
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.9/main/x86_64/APKINDEX.tar.gz
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.9/community/x86_64/APKINDEX.tar.gz
+v3.9.2-1-g592d872fb8 [http://dl-cdn.alpinelinux.org/alpine/v3.9/main]
+v3.9.2-2-ge7dc3349a9 [http://dl-cdn.alpinelinux.org/alpine/v3.9/community]
+OK: 9754 distinct packages available
+ ---> 7a300c62ae3a
+Removing intermediate container 9ebd6f932e91
+Step 3/3 : RUN apk add apache2
+ ---> Running in d36984f7dfff
+(1/6) Installing libuuid (2.33-r0)
+(2/6) Installing apr (1.6.5-r0)
+(3/6) Installing expat (2.2.6-r0)
+(4/6) Installing apr-util (1.6.1-r5)
+(5/6) Installing pcre (8.42-r1)
+(6/6) Installing apache2 (2.4.38-r2)
+Executing apache2-2.4.38-r2.pre-install
+Executing busybox-1.29.3-r10.trigger
+OK: 9 MiB in 20 packages
+ ---> b6bc0e5e77fe
+Removing intermediate container d36984f7dfff
+Successfully built b6bc0e5e77fe
+Successfully tagged alap:1
+Successfully tagged alap:latest
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image history alpine
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+5cb3aa00f899        3 days ago          /bin/sh -c #(nop)  CMD ["/bin/sh"]              0B      
+<missing>           3 days ago          /bin/sh -c #(nop) ADD file:88875982b0512a9...   5.53MB  
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image history alap
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+b6bc0e5e77fe        38 seconds ago      /bin/sh -c apk add apache2                      3.59MB  
+7a300c62ae3a        43 seconds ago      /bin/sh -c apk update                           1.31MB  
+5cb3aa00f899        3 days ago          /bin/sh -c #(nop)  CMD ["/bin/sh"]              0B      
+<missing>           3 days ago          /bin/sh -c #(nop) ADD file:88875982b0512a9...   5.53MB  
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>  3.59MB
+-bash: 3.59MB: command not found
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image ls alap
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+alap                1                   b6bc0e5e77fe        2 minutes ago       10.4MB
+alap                latest              b6bc0e5e77fe        2 minutes ago       10.4MB
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image ls -a| grep 8914f7eb5659          <none>                                                           <none>              8914f7eb5659        14 minutes ago      6.84MB
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image prune
+WARNING! This will remove all dangling images.
+Are you sure you want to continue? [y/N] y
+Deleted Images:
+deleted: sha256:43f65bff8c444bf046f8424a9d3ff28edf37e1847253e50725039c4cb9eeead5
+deleted: sha256:f99dd63041bd70c3057c14a912e75112a9a670cb1dd6cf950ba085c7fd265810
+deleted: sha256:8914f7eb5659be9b96283245032fd340cdc760b0d19bfad63274e8d0b7330728
+deleted: sha256:53c0811ea55dd46d4003c6aa3f887cda77bb0d8a9f5542c1d28afb53f6d1f6d3
+
+Total reclaimed space: 4.898MB
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image push alap:1
+The push refers to a repository [docker.io/library/alap]
+8f9aef968aa2: Preparing
+7ef3233219ee: Preparing
+bcf2f368fe23: Preparing
+denied: requested access to the resource is denied
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker login
+Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+Username: adityaprabhakara
+Password:
+Error response from daemon: Get https://registry-1.docker.io/v2/: unauthorized: incorrect username or password
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker login
+Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+Username: adityaprabhakara
+Password:
+Login Succeeded
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image push alap:1
+The push refers to a repository [docker.io/library/alap]
+8f9aef968aa2: Preparing
+7ef3233219ee: Preparing
+bcf2f368fe23: Preparing
+denied: requested access to the resource is denied
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> #docker image push adityaprabhakara/alap:1
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image ls alap
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+alap                1                   b6bc0e5e77fe        10 minutes ago      10.4MB
+alap                latest              b6bc0e5e77fe        10 minutes ago      10.4MB
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image build --no-cache -f Dockerfile -t adityaprabhakara/alap:1 -t adityaprabhakara/^Cap:latest .
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image tag alap:1 adityaprabhakara/alap:1
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image tag alap:latest adityaprabhakara/alap:latest
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image ls alap
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+alap                1                   b6bc0e5e77fe        11 minutes ago      10.4MB
+alap                latest              b6bc0e5e77fe        11 minutes ago      10.4MB
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image ls adityaprabhakara/alap
+REPOSITORY              TAG                 IMAGE ID            CREATED             SIZE
+adityaprabhakara/alap   1                   b6bc0e5e77fe        11 minutes ago      10.4MB
+adityaprabhakara/alap   latest              b6bc0e5e77fe        11 minutes ago      10.4MB
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image push adityaprabhakara/alap:1
+The push refers to a repository [docker.io/adityaprabhakara/alap]
+8f9aef968aa2: Pushed
+7ef3233219ee: Pushed
+bcf2f368fe23: Pushed
+1: digest: sha256:6882a083d8759cdce1fda47ab85d484cf0bf2404618cab4978a6bd8e811511d3 size: 950
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image push adityaprabhakara/alap:latest
+The push refers to a repository [docker.io/adityaprabhakara/alap]
+8f9aef968aa2: Layer already exists
+7ef3233219ee: Layer already exists
+bcf2f368fe23: Layer already exists
+latest: digest: sha256:6882a083d8759cdce1fda47ab85d484cf0bf2404618cab4978a6bd8e811511d3 size: 950
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> #docker image pull adityaprabhakara/alap:latest
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image ls
+REPOSITORY                                                       TAG                 IMAGE ID            CREATED             SIZE
+adityaprabhakara/alap                                            1                   b6bc0e5e77fe        15 minutes ago      10.4MB
+adityaprabhakara/alap                                            latest              b6bc0e5e77fe        15 minutes ago      10.4MB
+alap                                                             1                   b6bc0e5e77fe        15 minutes ago      10.4MB
+alap                                                             latest              b6bc0e5e77fe        15 minutes ago      10.4MB
+nginx-ping                                                       latest              5aae2da2bebd        3 hours ago         128MB
+nginx                                                            alpine              32a037976344        3 days ago          16.1MB
+registry                                                         2                   f32a97de94e1        3 days ago          25.8MB
+alpine                                                           latest              5cb3aa00f899        3 days ago          5.53MB
+127.0.0.1:5000/al-apache                                         3                   3ceae2ee17c2        5 days ago          10.4MB
+nginx                                                            1.14                e706cb01fa6b        6 days ago          109MB
+nginx                                                            1                   881bd08c0b08        6 days ago          109MB
+nginx                                                            latest              881bd08c0b08        6 days ago          109MB
+akrb05/app                                                       1                   e532bddfcfdb        13 days ago         10.4MB
+alpine-alpache                                                   latest              5d6cb3da3abe        2 weeks ago         10.4MB
+gcr.io/kubernetes-helm/tiller                                    v2.13.0-rc.1        3df95e340abd        3 weeks ago         82.1MB
+ghost                                                            1-alpine            4afbb5470d6c        4 weeks ago         450MB
+mysql                                                            5.7                 e47e309f72c8        4 weeks ago         372MB
+k8s.gcr.io/heapster-amd64                                        v1.5.3              f57c75cd7b0a        10 months ago       75.3MB
+prom/prometheus                                                  v2.1.0              c8ecf7c719c1        13 months ago       112MB
+gcr.io/google_containers/metrics-server-amd64                    v0.2.1              9801395070f3        14 months ago       42.5MB
+k8s.gcr.io/kubernetes-dashboard-amd64                            v1.8.1              e94d2f21bc0c        15 months ago       121MB
+k8s.gcr.io/heapster-amd64                                        v1.5.0              86a0ddc3a8c2        15 months ago       75.3MB
+quay.io/kubernetes-ingress-controller/nginx-ingress-controller   0.9.0               e56d6a14283a        15 months ago       190MB
+gcr.io/google-containers/kube-addon-manager                      v6.5                d166ffa9201a        16 months ago       79.5MB
+k8s.gcr.io/defaultbackend                                        1.4                 846921f0fe0e        16 months ago       4.84MB
+k8s.gcr.io/k8s-dns-sidecar-amd64                                 1.14.5              fed89e8b4248        17 months ago       41.8MB
+k8s.gcr.io/k8s-dns-kube-dns-amd64                                1.14.5              512cd7425a73        17 months ago       49.4MB
+k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64                           1.14.5              459944ce8cc4        17 months ago       41.4MB
+k8s.gcr.io/heapster-influxdb-amd64                               v1.3.3              577260d221db        18 months ago       12.5MB
+k8s.gcr.io/heapster-grafana-amd64                                v4.4.3              8cb3de219af7        18 months ago       152MB
+gcr.io/google_containers/pause-amd64                             3.0                 99e59f495ffa        2 years ago         747kB
+gcr.io/google_containers/hpa-example                             latest              4ca4c13a6d7c        3 years ago         481MB
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+

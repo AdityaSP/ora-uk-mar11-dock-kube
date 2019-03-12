@@ -2149,7 +2149,13 @@ bc82bd93c2357a6182a246f3e1bc661f8bfa6dc96155fb5094d81f1e86065456
 
 /home/docker>
 
+---------------------------------
+BLOG USING DOCKER CONTAINERS
+docker network create blog-nw
 
+docker container run -d --network blog-nw --name blog-db -e MYSQL_ROOT_PASSWORD=welcome -v /tmp/blog-vol:/var/lib/mysql mysql:5.7
+
+docker container run -d --network blog-nw --name ghost -p 9095:2368 -e database__client=mysql -e database__connection__host=blog-db -e database__connection__user=root -e database__connection__password=welcome -e database__connection__database=ghost ghost:1-alpine
 
 
 

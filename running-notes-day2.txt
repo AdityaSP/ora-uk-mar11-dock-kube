@@ -1,0 +1,495 @@
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> cat Dockerfile
+FROM alpine
+RUN apk update
+RUN apk add apache2
+CMD ["httpd", "-D", "FOREGROUND"]
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image ls alap
+REPOSITORY          TAG                 IMAGE ID            CREATED                             SIZE
+alap                2                   6f5f73868b74        17 hours ago                        10.4MB
+alap                latest              6f5f73868b74        17 hours ago                        10.4MB
+alap                1                   b6bc0e5e77fe        18 hours ago                        10.4MB
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run -it alap s                h
+/ # httpd -D FOREGROUND
+AH00558: httpd: Could not reliably determine the server's fully qualified domain                 name, using 172.17.0.14. Set the 'ServerName' directive globally to suppress th                is message
+^Z[1]+  Stopped                    httpd -D FOREGROUND
+/ # bg
+[1] httpd -D FOREGROUND
+/ # ps
+PID   USER     TIME  COMMAND
+    1 root      0:00 sh
+    6 root      0:00 httpd -D FOREGROUND
+    7 apache    0:00 httpd -D FOREGROUND
+    8 apache    0:00 httpd -D FOREGROUND
+    9 apache    0:00 httpd -D FOREGROUND
+   10 apache    0:00 httpd -D FOREGROUND
+   11 apache    0:00 httpd -D FOREGROUND
+   12 root      0:00 ps
+/ # exit
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run -d alpine                 
+d5eaa34fde0c1dbeac910de2041b1c3240cb3ea0c9df4f70ce0ba9beba934743
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container ls -a | grep -                v k8s
+CONTAINER ID        IMAGE                                                                            COMMAND                  CREATED              STATUS                      P                ORTS                                                                NAMES
+d5eaa34fde0c        alpine                                                                           "/bin/sh"                11 seconds ago       Exited (0) 10 seconds ago                                                                                        inspiring_sw                anson
+12149bbf6f28        alap                                                                             "sh"                     About a minute ago   Exited (0) 46 seconds ago                                                                                        vigilant_lal                ande
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run -d alpine                 ping google.com
+8f7e824e72f399e9326719435742649e299e498486dd77e87608087c74b99d75
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run alpine pin                g google.com
+PING google.com (172.217.167.142): 56 data bytes
+64 bytes from 172.217.167.142: seq=0 ttl=53 time=31.447 ms
+64 bytes from 172.217.167.142: seq=1 ttl=53 time=34.344 ms
+64 bytes from 172.217.167.142: seq=2 ttl=53 time=34.677 ms
+64 bytes from 172.217.167.142: seq=3 ttl=53 time=55.669 ms
+^C
+--- google.com ping statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 31.447/39.034/55.669 ms
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container stop 8f7e824e
+
+8f7e824e
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container ls -a | grep -                v k8s
+CONTAINER ID        IMAGE                                                                            COMMAND                  CREATED              STATUS                                          PORTS                                                                NAMES
+a27325beed71        alpine                                                                           "ping google.com"        About a minute ago   Exited (0) About a minute ago                                                                                        sleepy_j                ang
+8f7e824e72f3        alpine                                                                           "ping google.com"        About a minute ago   Exited (137) 9 seconds ago                                                                                           agitated                _poincare
+d5eaa34fde0c        alpine                                                                           "/bin/sh"                2 minutes ago        Exited (0) 2 minutes ago                                                                                             inspirin                g_swanson
+12149bbf6f28        alap                                                                             "sh"                     3 minutes ago        Exited (0) 2 minutes ago                                                                                             vigilant                _lalande
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container logs 8f7e824e7                2f3 | tail
+64 bytes from 172.217.167.142: seq=87 ttl=53 time=34.506 ms
+64 bytes from 172.217.167.142: seq=88 ttl=53 time=32.775 ms
+64 bytes from 172.217.167.142: seq=89 ttl=53 time=32.324 ms
+64 bytes from 172.217.167.142: seq=90 ttl=53 time=31.394 ms
+64 bytes from 172.217.167.142: seq=91 ttl=53 time=35.861 ms
+64 bytes from 172.217.167.142: seq=92 ttl=53 time=30.984 ms
+64 bytes from 172.217.167.142: seq=93 ttl=53 time=31.105 ms
+64 bytes from 172.217.167.142: seq=94 ttl=53 time=34.948 ms
+64 bytes from 172.217.167.142: seq=95 ttl=53 time=37.759 ms
+64 bytes from 172.217.167.142: seq=96 ttl=53 time=34.035 ms
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> ls
+Dockerfile
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> ls
+Dockerfile
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container ls | grep -v k                8s
+CONTAINER ID        IMAGE                                                                            COMMAND                  CREATED             STATUS              PORTS                                                                                NAMES
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container prune
+WARNING! This will remove all stopped containers.
+Are you sure you want to continue? [y/N] y
+Deleted Containers:
+a27325beed71de220ec3d8b94af65c5cf3fa992d36b14f56ebaee56fd3bcf344
+8f7e824e72f399e9326719435742649e299e498486dd77e87608087c74b99d75
+d5eaa34fde0c1dbeac910de2041b1c3240cb3ea0c9df4f70ce0ba9beba934743
+12149bbf6f2817ecaaf974e834d00100e017a34b523d68d167747bf804c334e2
+
+Total reclaimed space: 439B
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run -d alap
+6ebfe4da55dd4c1722676e8082316154d70069040b473515c30c39804061ba99
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container exec -it 6ebfe                4d sh
+/ # cd /etc/apache2/
+/etc/apache2 # ls
+conf.d      httpd.conf  magic       mime.types
+/etc/apache2 # vi httpd.conf
+/etc/apache2 # sed -i "s/Listen 80/Listen 9090/" httpd.conf
+/etc/apache2 # grep Listen httpd.conf
+# Listen: Allows you to bind Apache to specific IP addresses and/or
+# Change this to Listen on specific IP addresses as shown below to
+#Listen 12.34.56.78:80
+Listen 9090
+/etc/apache2 # exit
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> cd ..
+
+/c/Users/Dell lap/docker-workshop/us-mar11>
+
+/c/Users/Dell lap/docker-workshop/us-mar11> mkdir pinger
+
+/c/Users/Dell lap/docker-workshop/us-mar11> cd pinger/
+
+/c/Users/Dell lap/docker-workshop/us-mar11/pinger> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/us-mar11/pinger> docker build -t pinger .
+Sending build context to Docker daemon  2.048kB
+Step 1/2 : FROM alpine
+ ---> 5cb3aa00f899
+Step 2/2 : CMD ping -c4 google.com
+ ---> Using cache
+ ---> bd33c7b41784
+Successfully built bd33c7b41784
+Successfully tagged pinger:latest
+
+/c/Users/Dell lap/docker-workshop/us-mar11/pinger> docker container run --rm pinger             PING google.com (172.217.167.142): 56 data bytes
+64 bytes from 172.217.167.142: seq=0 ttl=53 time=39.694 ms
+64 bytes from 172.217.167.142: seq=1 ttl=53 time=35.056 ms
+64 bytes from 172.217.167.142: seq=2 ttl=53 time=33.317 ms
+64 bytes from 172.217.167.142: seq=3 ttl=53 time=32.864 ms
+
+--- google.com ping statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 32.864/35.232/39.694 ms
+
+/c/Users/Dell lap/docker-workshop/us-mar11/pinger> docker container run --rm pinger ping -c4 yahoo.com
+PING yahoo.com (98.138.219.232): 56 data bytes
+64 bytes from 98.138.219.232: seq=0 ttl=45 time=256.231 ms
+64 bytes from 98.138.219.232: seq=1 ttl=45 time=255.664 ms
+64 bytes from 98.138.219.232: seq=2 ttl=45 time=255.490 ms
+64 bytes from 98.138.219.232: seq=3 ttl=45 time=253.824 ms
+
+--- yahoo.com ping statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 253.824/255.302/256.231 ms
+
+/c/Users/Dell lap/docker-workshop/us-mar11/pinger> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/us-mar11/pinger>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/pinger> cat Dockerfile
+FROM alpine
+ENTRYPOINT ["ping", "-c4"]
+CMD ["google.com"]
+
+/c/Users/Dell lap/docker-workshop/us-mar11/pinger> docker build -t pinger .
+Sending build context to Docker daemon  2.048kB
+Step 1/3 : FROM alpine
+ ---> 5cb3aa00f899
+Step 2/3 : ENTRYPOINT ping -c4
+ ---> Using cache
+ ---> 20518f2aa174
+Step 3/3 : CMD google.com
+ ---> Using cache
+ ---> bb3d9a6c1f1a
+Successfully built bb3d9a6c1f1a
+Successfully tagged pinger:latest
+
+/c/Users/Dell lap/docker-workshop/us-mar11/pinger> docker container run --rm pinger
+PING google.com (172.217.167.142): 56 data bytes
+64 bytes from 172.217.167.142: seq=0 ttl=53 time=48.608 ms
+64 bytes from 172.217.167.142: seq=1 ttl=53 time=31.035 ms
+64 bytes from 172.217.167.142: seq=2 ttl=53 time=31.479 ms
+64 bytes from 172.217.167.142: seq=3 ttl=53 time=34.491 ms
+
+--- google.com ping statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 31.035/36.403/48.608 ms
+
+/c/Users/Dell lap/docker-workshop/us-mar11/pinger> docker container run --rm pinger yahoo.com
+PING yahoo.com (72.30.35.9): 56 data bytes
+64 bytes from 72.30.35.9: seq=0 ttl=46 time=220.261 ms
+64 bytes from 72.30.35.9: seq=1 ttl=46 time=220.537 ms
+64 bytes from 72.30.35.9: seq=2 ttl=46 time=219.839 ms
+64 bytes from 72.30.35.9: seq=3 ttl=46 time=219.156 ms
+
+--- yahoo.com ping statistics ---
+4 packets transmitted, 4 packets received, 0% packet loss
+round-trip min/avg/max = 219.156/219.948/220.537 ms
+
+/c/Users/Dell lap/docker-workshop/us-mar11/pinger> docker image history alap
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+6f5f73868b74        17 hours ago        /bin/sh -c #(nop)  CMD ["httpd" "-D" "FORE...   0B      
+b6bc0e5e77fe        19 hours ago        /bin/sh -c apk add apache2                      3.59MB  
+7a300c62ae3a        19 hours ago        /bin/sh -c apk update                           1.31MB  
+5cb3aa00f899        4 days ago          /bin/sh -c #(nop)  CMD ["/bin/sh"]              0B      
+<missing>           4 days ago          /bin/sh -c #(nop) ADD file:88875982b0512a9...   5.53MB  
+
+/c/Users/Dell lap/docker-workshop/us-mar11/pinger> cat Dockerfile
+FROM alpine
+ENTRYPOINT ["ping", "-c4"]
+CMD ["google.com"]
+
+/c/Users/Dell lap/docker-workshop/us-mar11/pinger> cd ..
+
+/c/Users/Dell lap/docker-workshop/us-mar11> cd alap/
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> cat Dockerfile
+FROM alpine
+RUN apk update
+RUN apk add apache2
+CMD ["httpd", "-D", "FOREGROUND"]
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> vi docker-entrypoint.sh
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> ls
+Dockerfile  docker-entrypoint.sh
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> vi docker-entrypoint.sh
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> cat Dockerfile
+FROM alpine
+RUN apk update
+RUN apk add apache2
+COPY docker-entrypoint.sh /bin
+RUN chmod +x docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["httpd", "-D", "FOREGROUND"]
+
+#docker-entrypoint.sh httpd -D FOREGROUND
+
+#ENTRYPOINT ["ping", -c4"]
+#CMD ["google.com"]
+#ping -c4 google.com
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> cat Dockerfile
+FROM alpine
+RUN apk update
+RUN apk add apache2
+COPY docker-entrypoint.sh /bin
+RUN chmod +x docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["httpd", "-D", "FOREGROUND"]
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> cat docker-entrypoint.sh
+#!/bin/sh
+
+sed -i "s/Listen 80/Listen 9090/" /etc/apache2/httpd.conf
+
+exec "$@"
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run --rm alpine ls
+bin
+dev
+etc
+home
+lib
+media
+mnt
+opt
+proc
+root
+run
+sbin
+srv
+sys
+tmp
+usr
+var
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run --rm alpine env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=f718bb5435d3
+HOME=/root
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+(reverse-i-search)`al': docker container run -d -p 9092:2368 --name ghost --network blog-nw -e database__client=mysql -e database__connection__host=blog-db -e database__connection__user=root -e database__connection__password=welcome -e database__connection__database=ghost ghost:1-^Cpine 
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image ls alap
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+alap                2                   6f5f73868b74        18 hours ago        10.4MB
+alap                latest              6f5f73868b74        18 hours ago        10.4MB
+alap                1                   b6bc0e5e77fe        19 hours ago        10.4MB
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image build -t alap:3 -t alap:latest .
+Sending build context to Docker daemon  3.072kB
+Step 1/7 : FROM alpine
+ ---> 5cb3aa00f899
+Step 2/7 : RUN apk update
+ ---> Using cache
+ ---> 7a300c62ae3a
+Step 3/7 : RUN apk add apache2
+ ---> Using cache
+ ---> b6bc0e5e77fe
+Step 4/7 : COPY docker-entrypoint.sh /bin
+ ---> b3b0ace7ac7a
+Step 5/7 : RUN chmod +x /bin/docker-entrypoint.sh
+ ---> Running in edcf9cf0c28e
+ ---> 1aad94f72815
+Removing intermediate container edcf9cf0c28e
+Step 6/7 : ENTRYPOINT docker-entrypoint.sh
+ ---> Running in ea19bce034aa
+ ---> b67e68c07fe2
+Removing intermediate container ea19bce034aa
+Step 7/7 : CMD httpd -D FOREGROUND
+ ---> Running in 26be4d011d37
+ ---> 99d2681888c7
+Removing intermediate container 26be4d011d37
+Successfully built 99d2681888c7
+Successfully tagged alap:3
+Successfully tagged alap:latest
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> cat docker-entrypoint.sh
+#!/bin/sh
+
+sed -i "s/Listen 80/Listen 9090/" /etc/apache2/httpd.conf
+
+exec "$@"
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run -d -p 9999:9090 alap
+80e70eb0026a3d28cc71be1ebe62b5833e6f2462bacce4abf082c06268cffba9
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container ls | grep -v k8s
+CONTAINER ID        IMAGE                                                            COMMAND                  CREATED             STATUS              PORTS                                                                NAMES
+80e70eb0026a        alap                                                             "docker-entrypoint..."   39 seconds ago      Up 38 seconds       0.0.0.0:9999->9090/tcp                                               ecstatic_mayer
+6ebfe4da55dd        6f5f73868b74                                                     "httpd -D FOREGROUND"    28 minutes ago      Up 28 minutes                                                                            clever_meninsky
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> #docker container run --rm alpine env
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> vi docker-entrypoint.sh
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run --rm alpine env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=05249b2ec86f
+HOME=/root
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run --rm -e APACHE_PORT=8080 alpine env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=465c057cdda0
+APACHE_PORT=8080
+HOME=/root
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> cat docker-entrypoint.sh
+#!/bin/sh
+
+sed -i "s/Listen 80/Listen $APACHE_PORT/" /etc/apache2/httpd.conf
+
+exec "$@"
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> cat Dockerfile
+FROM alpine
+RUN apk update
+RUN apk add apache2
+COPY docker-entrypoint.sh /bin
+RUN chmod +x /bin/docker-entrypoint.sh
+ENV APACHE_PORT 80
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["httpd", "-D", "FOREGROUND"]
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> cat docker-entrypoint.sh
+#!/bin/sh
+
+sed -i "s/Listen 80/Listen $APACHE_PORT/" /etc/apache2/httpd.conf
+
+exec "$@"
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image build -t alap:4 -t alap:latest .
+Sending build context to Docker daemon  3.072kB
+Step 1/8 : FROM alpine
+ ---> 5cb3aa00f899
+Step 2/8 : RUN apk update
+ ---> Using cache
+ ---> 7a300c62ae3a
+Step 3/8 : RUN apk add apache2
+ ---> Using cache
+ ---> b6bc0e5e77fe
+Step 4/8 : COPY docker-entrypoint.sh /bin
+ ---> 790481ae5103
+Step 5/8 : RUN chmod +x /bin/docker-entrypoint.sh
+ ---> Running in 432745b55a6e
+ ---> 1cee373873b6
+Removing intermediate container 432745b55a6e
+Step 6/8 : ENV APACHE_PORT 80
+ ---> Running in b63f81a55b56
+ ---> 2b92ff78da1d
+Removing intermediate container b63f81a55b56
+Step 7/8 : ENTRYPOINT docker-entrypoint.sh
+ ---> Running in 427388ec0529
+ ---> 002013b5706c
+Removing intermediate container 427388ec0529
+Step 8/8 : CMD httpd -D FOREGROUND
+ ---> Running in 4cb552545c64
+ ---> 4662a6a44c40
+Removing intermediate container 4cb552545c64
+Successfully built 4662a6a44c40
+Successfully tagged alap:4
+Successfully tagged alap:latest
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker image history alap
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+4662a6a44c40        11 seconds ago      /bin/sh -c #(nop)  CMD ["httpd" "-D" "FORE...   0B      
+002013b5706c        11 seconds ago      /bin/sh -c #(nop)  ENTRYPOINT ["docker-ent...   0B      
+2b92ff78da1d        11 seconds ago      /bin/sh -c #(nop)  ENV APACHE_PORT=80           0B      
+1cee373873b6        12 seconds ago      /bin/sh -c chmod +x /bin/docker-entrypoint.sh   88B     
+790481ae5103        12 seconds ago      /bin/sh -c #(nop) COPY file:372807b98945ef...   88B     
+b6bc0e5e77fe        19 hours ago        /bin/sh -c apk add apache2                      3.59MB  
+7a300c62ae3a        19 hours ago        /bin/sh -c apk update                           1.31MB  
+5cb3aa00f899        4 days ago          /bin/sh -c #(nop)  CMD ["/bin/sh"]              0B      
+<missing>           4 days ago          /bin/sh -c #(nop) ADD file:88875982b0512a9...   5.53MB  
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run -d -e APACHE_PORT=8080 -p 9991:8080 alap
+cb1694549fc146f8652d6a229b6af1e9ef269aaee67bd28f7dcfd51d92894e25
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run -d  -p 9992:80 alap       1843d1f1f231d75ca674fede3c587f06730997f65019e5014f2199f31ac3585a
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container exec cb16945 env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=cb1694549fc1
+APACHE_PORT=8080
+HOME=/root
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container exec 1843d1 env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=1843d1f1f231
+APACHE_PORT=80
+HOME=/root
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> vi Dockerfile
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap> docker container run --rm -e APACHE_PORT=8080 -e ONE=1 -e TWO=2 alpine env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=aceb9da6506e
+APACHE_PORT=8080
+ONE=1
+TWO=2
+HOME=/root
+
+/c/Users/Dell lap/docker-workshop/us-mar11/alap>
+
+
+
+

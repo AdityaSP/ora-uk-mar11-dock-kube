@@ -1602,6 +1602,554 @@ aa0b3995c2feb42ddb47b0d8fbc21bc2af37f28314e8ed8b7c85e80ba93b811a
 
 /home/docker>
 
+-----------------------------------------------------
+
+/home/docker> docker container run -d --name w1 alap                                            3e5d4b0757ca1d5524c175ba79adeb5631b19318a74625d4f6047ae59f773fbb
+
+/home/docker> docker container run -d --name w2 alap
+e0f73dcfb65714eba084a274dc4dd30c76f2f216c9b5406c46b2e2ae07be6dee
+
+/home/docker> docker container run -d --name w3 alap
+ac18efa9bfce2c7e9d15cb54d508659523d7e238530954c32ed9fbac7a82021b
+
+/home/docker> docker container inspect w1 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "172.17.0.14",
+                    "IPAddress": "172.17.0.14",
+
+/home/docker> docker container inspect w2 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "172.17.0.15",
+                    "IPAddress": "172.17.0.15",
+
+/home/docker> docker container inspect w3 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "172.17.0.16",
+                    "IPAddress": "172.17.0.16",
+
+/home/docker> docker container exec w1 ping -c2 "172.17.0.15"
+PING 172.17.0.15 (172.17.0.15): 56 data bytes
+64 bytes from 172.17.0.15: seq=0 ttl=64 time=0.144 ms
+64 bytes from 172.17.0.15: seq=1 ttl=64 time=0.103 ms
+
+--- 172.17.0.15 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.103/0.123/0.144 ms
+
+/home/docker> docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+85b6602ec6b2        bridge              bridge              local
+f09381e2f190        host                host                local
+9cce334a36a7        none                null                local
+
+/home/docker> docker network inspect bridge
+[
+    {
+        "Name": "bridge",
+        "Id": "85b6602ec6b2044bf325532cfca3d44923492e70a503cbb944d198276434f08e",
+        "Created": "2019-03-12T04:24:50.591792275Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.17.0.0/16",
+                    "Gateway": "172.17.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "00557de5c4c3ab006decf6be41fdc7b87f705c0d3b4467ec570c58ff6bd19598": {
+                "Name": "k8s_POD_kubernetes-dashboard-77d8b98585-9cffv_kube-system_aae2ad11-2f94-11e9-8d17-080027326ca6_19",
+                "EndpointID": "bb676821e39bca4588eca20ebd1842ac0264181f4694ff4701068415d618be67",
+                "MacAddress": "02:42:ac:11:00:05",
+                "IPv4Address": "172.17.0.5/16",
+                "IPv6Address": ""
+            },
+            "14a929393d1ddfe972ad45ea75fcc20d5445f86923089498fb501518b579b959": {
+                "Name": "k8s_POD_heapster-546c9964c6-2w8ld_kube-system_ac314ae9-2f94-11e9-8d17-080027326ca6_19",
+                "EndpointID": "e2ea087eab9b95ef7ab928b99807d53a622e4e72fb4f1b865cf2ceb22521a5d5",
+                "MacAddress": "02:42:ac:11:00:04",
+                "IPv4Address": "172.17.0.4/16",
+                "IPv6Address": ""
+            },
+            "14f5a7ff0bfae4d903eed4ad75ba8a8cb05f4fd89c16405da2e1c0ea69839e68": {
+                "Name": "k8s_POD_nginx-ingress-controller-zjd74_kube-system_ab42b3da-2f94-11e9-8d17-080027326ca6_19",
+                "EndpointID": "02c6f9d4d9643d27b87ea7ce80538dc96c9979b850d7aea8b5a5327b97368a6a",
+                "MacAddress": "02:42:ac:11:00:06",
+                "IPv4Address": "172.17.0.6/16",
+                "IPv6Address": ""
+            },
+            "1b5eb71666357e07fd64e0ef09b17544eba91b1a77dbb657cf3e50cb2200193f": {
+                "Name": "k8s_POD_tiller-deploy-5b7c59888b-6rbgl_kube-system_42cc5a34-3c10-11e9-a9d7-080027326ca6_12",
+                "EndpointID": "9dfaa6254f05f2b0ea0b6f2aa65d789ca166f668d39d3bf2b4b263640b8584dc",
+                "MacAddress": "02:42:ac:11:00:02",
+                "IPv4Address": "172.17.0.2/16",
+                "IPv6Address": ""
+            },
+            "3e5d4b0757ca1d5524c175ba79adeb5631b19318a74625d4f6047ae59f773fbb": {
+                "Name": "w1",
+                "EndpointID": "f95f480a7289f422e9e8c4667b93bee59f3244a4aad2eace73ec45ea5b6ac69a",
+                "MacAddress": "02:42:ac:11:00:0e",
+                "IPv4Address": "172.17.0.14/16",
+                "IPv6Address": ""
+            },
+            "54ead6c0104a88f72d39f6a62b26277c97922592dc6ee5407b7f6506ca10483d": {
+                "Name": "k8s_POD_monitoring-grafana-65757b9656-h4fbs_kube-system_abcaee65-2f94-11e9-8d17-080027326ca6_19",
+                "EndpointID": "87f012b12c3314b600d5905be272c5afb0f4241f4cd7457dc02a30744d16568d",
+                "MacAddress": "02:42:ac:11:00:03",
+                "IPv4Address": "172.17.0.3/16",
+                "IPv6Address": ""
+            },
+            "658c5578cf091e57e2d87837f526d0938c8def4763f150f26ce5a26d0f015983": {
+                "Name": "k8s_POD_monitoring-influxdb-66946c9f58-h5lhw_kube-system_abf955f0-2f94-11e9-8d17-080027326ca6_19",
+                "EndpointID": "4e83859084d84a7c65cccccc5cc02b0a40c56953e2720465ad93f3fc2db4b30e",
+                "MacAddress": "02:42:ac:11:00:09",
+                "IPv4Address": "172.17.0.9/16",
+                "IPv6Address": ""
+            },
+            "6b74b265d68934e6703f7e0be035b402cffd322a1cd54cfcb95923a2db3f2277": {
+                "Name": "k8s_POD_influxdb-grafana-tx55c_kube-system_ab1bc183-2f94-11e9-8d17-080027326ca6_20",
+                "EndpointID": "f9474f07511a8c20fe9565e16ba1304c669a993998232f40d7fef1a8cc836439",
+                "MacAddress": "02:42:ac:11:00:0d",
+                "IPv4Address": "172.17.0.13/16",
+                "IPv6Address": ""
+            },
+            "a2d701777e2431cda12de818db6d204832146b72de4abd672cd9f8a86272dfa8": {
+                "Name": "k8s_POD_metrics-server-bb9ffc6b8-c4bsh_kube-system_ac742fe8-2f94-11e9-8d17-080027326ca6_20",
+                "EndpointID": "e6a7adb03d81b9a7d94efa2c25ef3f9a2361695464672ab29b513ada81cf933f",
+                "MacAddress": "02:42:ac:11:00:08",
+                "IPv4Address": "172.17.0.8/16",
+                "IPv6Address": ""
+            },
+            "a540587b19b7fc95d5611521f4e1ed7e39c71159fb2f2d05ed98a45b409e2d02": {
+                "Name": "k8s_POD_heapster-xnbjb_kube-system_aafb3c7c-2f94-11e9-8d17-080027326ca6_19",
+                "EndpointID": "5a98e414428c355ecdb0feb8d9e9cf8aa0efc8536c3d1d610b2ea3135ef56791",
+                "MacAddress": "02:42:ac:11:00:0c",
+                "IPv4Address": "172.17.0.12/16",
+                "IPv6Address": ""
+            },
+            "ac18efa9bfce2c7e9d15cb54d508659523d7e238530954c32ed9fbac7a82021b": {
+                "Name": "w3",
+                "EndpointID": "2c94e159a5c4676c57a003f736df39f4599ebe90b0448d01d8f11be94a27fc60",
+                "MacAddress": "02:42:ac:11:00:10",
+                "IPv4Address": "172.17.0.16/16",
+                "IPv6Address": ""
+            },
+            "c4f2b0b1d80ea1b1d5f0eb5b98c22f043c89d5274a1eb9f2c0fb04bab9eccbbb": {
+                "Name": "k8s_POD_kube-dns-54cccfbdf8-f5fbr_kube-system_aba5849a-2f94-11e9-8d17-080027326ca6_19",
+                "EndpointID": "c0dee1378550650887e69e218cfb8e8c9f90cc271b45a714db5d91b5a67750e8",
+                "MacAddress": "02:42:ac:11:00:07",
+                "IPv4Address": "172.17.0.7/16",
+                "IPv6Address": ""
+            },
+            "e0f73dcfb65714eba084a274dc4dd30c76f2f216c9b5406c46b2e2ae07be6dee": {
+                "Name": "w2",
+                "EndpointID": "c8a0a99230aceacc779f5c9ec82fc6ced33ecca04682dffaa3a89f1964785520",
+                "MacAddress": "02:42:ac:11:00:0f",
+                "IPv4Address": "172.17.0.15/16",
+                "IPv6Address": ""
+            },
+            "e6eee9b15be9d32c2c25f655f1a651aa4478055f52818098f1ef5f8497d31e40": {
+                "Name": "k8s_POD_prometheus-deployment-79c7cf44fc-6bkz4_monitoring_add0d617-2f94-11e9-8d17-080027326ca6_20",
+                "EndpointID": "1f3a4d145fdc70093a1a445a441708910d88056acd7161530cc9e7895c100b73",
+                "MacAddress": "02:42:ac:11:00:0b",
+                "IPv4Address": "172.17.0.11/16",
+                "IPv6Address": ""
+            },
+            "fa70ba08c0781d512fffecb1fe8ee36603e8526ad61c837b428494ae625b438a": {
+                "Name": "k8s_POD_default-http-backend-cvzhd_kube-system_ab6b020b-2f94-11e9-8d17-080027326ca6_20",
+                "EndpointID": "67fccc6b7ebfa4efb739f4b1fe8a2ba6c786e78d83b46a1e9292f270ed026d5a",
+                "MacAddress": "02:42:ac:11:00:0a",
+                "IPv4Address": "172.17.0.10/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {
+            "com.docker.network.bridge.default_bridge": "true",
+            "com.docker.network.bridge.enable_icc": "true",
+            "com.docker.network.bridge.enable_ip_masquerade": "true",
+            "com.docker.network.bridge.host_binding_ipv4": "0.0.0.0",
+            "com.docker.network.bridge.name": "docker0",
+            "com.docker.network.driver.mtu": "1500"
+        },
+        "Labels": {}
+    }
+]
+
+/home/docker>
+
+/home/docker> docker container inspect w1
+[
+    {
+        "Id": "3e5d4b0757ca1d5524c175ba79adeb5631b19318a74625d4f6047ae59f773fbb",
+        "Created": "2019-03-12T19:13:37.580651707Z",
+        "Path": "docker-entrypoint.sh",
+        "Args": [
+            "httpd",
+            "-D",
+            "FOREGROUND"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 16423,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2019-03-12T19:13:37.892680544Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:4662a6a44c400cc4bf45e8292effa8c6b917362ac36bf6a18236b41aa7e6cffb",
+        "ResolvConfPath": "/var/lib/docker/containers/3e5d4b0757ca1d5524c175ba79adeb5631b19318a74625d4f6047ae59f773fbb/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/3e5d4b0757ca1d5524c175ba79adeb5631b19318a74625d4f6047ae59f773fbb/hostname",
+        "HostsPath": "/var/lib/docker/containers/3e5d4b0757ca1d5524c175ba79adeb5631b19318a74625d4f6047ae59f773fbb/hosts",
+        "LogPath": "/var/lib/docker/containers/3e5d4b0757ca1d5524c175ba79adeb5631b19318a74625d4f6047ae59f773fbb/3e5d4b0757ca1d5524c175ba79adeb5631b19318a74625d4f6047ae59f773fbb-json.log",
+        "Name": "/w1",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "default",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": null,
+            "CapDrop": null,
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "shareable",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DiskQuota": 0,
+            "KernelMemory": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": false,
+            "PidsLimit": 0,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0
+        },
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/4ea0d66c5f074d9f1c3323407fd9bacbece21a0b488401fa1bbfdff56fa8bfc0-init/diff:/var/lib/docker/overlay2/80b6a17cbbfd0f6f1e938a606cb2d061fe792a6c22a142864e22e764082bf77c/diff:/var/lib/docker/overlay2/6a09a04f52c380d0ecc42e51989640f4990e26a12c06ff3b565232c6bc3eca60/diff:/var/lib/docker/overlay2/fad86b7c1311ed218354f71e820dd2b56fe5069677af3f581cb98102c53e5c28/diff:/var/lib/docker/overlay2/d1483958ffe7b741361b750f028fdcc66e90ffd9d6edc6bcd2a5d9b932cee38f/diff:/var/lib/docker/overlay2/001ba628ae969629cdfb9a799a7c57a2e909cbd8793424b6b94611ad5cca19ab/diff",
+                "MergedDir": "/var/lib/docker/overlay2/4ea0d66c5f074d9f1c3323407fd9bacbece21a0b488401fa1bbfdff56fa8bfc0/merged",
+                "UpperDir": "/var/lib/docker/overlay2/4ea0d66c5f074d9f1c3323407fd9bacbece21a0b488401fa1bbfdff56fa8bfc0/diff",
+                "WorkDir": "/var/lib/docker/overlay2/4ea0d66c5f074d9f1c3323407fd9bacbece21a0b488401fa1bbfdff56fa8bfc0/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [],
+        "Config": {
+            "Hostname": "3e5d4b0757ca",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "APACHE_PORT=80"
+            ],
+            "Cmd": [
+                "httpd",
+                "-D",
+                "FOREGROUND"
+            ],
+            "ArgsEscaped": true,
+            "Image": "alap",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {}
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "8accad5a784da9971174c522de475274971614df395beb12ca82f6bfcb0fac1f",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": {},
+            "SandboxKey": "/var/run/docker/netns/8accad5a784d",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "f95f480a7289f422e9e8c4667b93bee59f3244a4aad2eace73ec45ea5b6ac69a",
+            "Gateway": "172.17.0.1",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "172.17.0.14",
+            "IPPrefixLen": 16,
+            "IPv6Gateway": "",
+            "MacAddress": "02:42:ac:11:00:0e",
+            "Networks": {
+                "bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "NetworkID": "85b6602ec6b2044bf325532cfca3d44923492e70a503cbb944d198276434f08e",
+                    "EndpointID": "f95f480a7289f422e9e8c4667b93bee59f3244a4aad2eace73ec45ea5b6ac69a",
+                    "Gateway": "172.17.0.1",
+                    "IPAddress": "172.17.0.14",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "02:42:ac:11:00:0e",
+                    "DriverOpts": null
+                }
+            }
+        }
+    }
+]
+
+/home/docker>
+
+/home/docker> docker network create w1-w2-net
+ba6e85898f1bca61e7550eaccfb56d7bf2dca8c4e3098ead559e0294341354b8
+
+/home/docker> docker network inspect w1-w2-net
+[
+    {
+        "Name": "w1-w2-net",
+        "Id": "ba6e85898f1bca61e7550eaccfb56d7bf2dca8c4e3098ead559e0294341354b8",
+        "Created": "2019-03-12T19:21:11.279472956Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.18.0.0/16",
+                    "Gateway": "172.18.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {},
+        "Options": {},
+        "Labels": {}
+    }
+]
+
+/home/docker>
+
+/home/docker> docker container inspect w1 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "172.17.0.14",
+                    "IPAddress": "172.17.0.14",
+
+/home/docker> docker container inspect w2 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "172.17.0.15",
+                    "IPAddress": "172.17.0.15",
+
+/home/docker> docker network disconnect bridge w1
+
+/home/docker> docker network disconnect bridge w2
+
+/home/docker> docker network connect w1-w2-net w1
+
+/home/docker> docker network connect w1-w2-net w2
+
+/home/docker> docker container inspect w1 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.18.0.2",
+
+/home/docker> docker container inspect w2 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.18.0.3",
+
+/home/docker> docker container exec w1 ping -c2 "172.18.0.3"
+PING 172.18.0.3 (172.18.0.3): 56 data bytes
+64 bytes from 172.18.0.3: seq=0 ttl=64 time=0.385 ms
+64 bytes from 172.18.0.3: seq=1 ttl=64 time=0.093 ms
+
+--- 172.18.0.3 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.093/0.239/0.385 ms
+
+/home/docker> docker container exec w3 ping -c2 "172.18.0.3"
+PING 172.18.0.3 (172.18.0.3): 56 data bytes
+^C
+
+/home/docker> docker network create w2-w3-net
+d01c4d3ff3d35159be98025c5e11e30ce9df01b8d9a74277432a56f2ca03c129
+
+/home/docker> docker network disconnect bridge w3
+
+/home/docker> docker network connect w2-w3-net w3
+
+/home/docker> docker container inspect w3 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.19.0.2",
+
+/home/docker> docker container inspect w2 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.18.0.3",
+
+/home/docker> docker network connect w2-w3-net w2
+
+/home/docker> docker container inspect w2 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.18.0.3",
+                    "IPAddress": "172.19.0.3",
+
+/home/docker>
+
+/home/docker> docker container inspect w1 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.18.0.2",
+
+/home/docker> docker container inspect w2 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.18.0.3",
+                    "IPAddress": "172.19.0.3",
+
+/home/docker> docker container inspect w3 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.19.0.2",
+
+/home/docker> docker container exec w1 ping -c2 "172.18.0.3"
+PING 172.18.0.3 (172.18.0.3): 56 data bytes
+64 bytes from 172.18.0.3: seq=0 ttl=64 time=0.093 ms
+64 bytes from 172.18.0.3: seq=1 ttl=64 time=0.065 ms
+
+--- 172.18.0.3 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.065/0.079/0.093 ms
+
+/home/docker> docker container exec w1 ping -c2 w2
+PING w2 (172.18.0.3): 56 data bytes
+64 bytes from 172.18.0.3: seq=0 ttl=64 time=0.575 ms
+64 bytes from 172.18.0.3: seq=1 ttl=64 time=0.098 ms
+
+--- w2 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.098/0.336/0.575 ms
+
+/home/docker> docker container exec w3 ping -c2 w2
+PING w2 (172.19.0.3): 56 data bytes
+64 bytes from 172.19.0.3: seq=0 ttl=64 time=0.122 ms
+64 bytes from 172.19.0.3: seq=1 ttl=64 time=0.090 ms
+
+--- w2 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.090/0.106/0.122 ms
+
+/home/docker> docker container exec w1 ping -c2 w3
+ping: bad address 'w3'
+
+/home/docker> docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+85b6602ec6b2        bridge              bridge              local
+f09381e2f190        host                host                local
+9cce334a36a7        none                null                local
+ba6e85898f1b        w1-w2-net           bridge              local
+d01c4d3ff3d3        w2-w3-net           bridge              local
+
+/home/docker>
+
+/home/docker> docker container run -d --name w5 --network w1-w2-net alap
+bc82bd93c2357a6182a246f3e1bc661f8bfa6dc96155fb5094d81f1e86065456
+
+/home/docker> docker container inspect w5 | grep -i ipaddress
+            "SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "172.18.0.4",
+
+/home/docker>
+
+
 
 
 

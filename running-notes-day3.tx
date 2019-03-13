@@ -92,3 +92,670 @@ NAME       READY     STATUS    RESTARTS   AGE
 my-nginx   1/1       Running   0          14m
 Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
 λ
+
+
+--------------------------------------
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl create -f dep/dep-helloworld.yml
+deployment "helloworld-dep" created
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods
+NAME                              READY     STATUS    RESTARTS   AGE
+helloworld-dep-5cdb68cc76-8v9xc   1/1       Running   0          12s
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get deploy
+NAME             DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+helloworld-dep   1         1         1            1           1m
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl describe deploy helloworld-dep
+Name:                   helloworld-dep
+Namespace:              default
+CreationTimestamp:      Wed, 13 Mar 2019 22:39:19 +0530
+Labels:                 app=helloworld
+Annotations:            deployment.kubernetes.io/revision=1
+Selector:               app=helloworld
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  1 max unavailable, 1 max surge
+Pod Template:
+  Labels:  app=helloworld
+  Containers:
+   web:
+    Image:        nginx:alpine
+    Port:         80/TCP
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   helloworld-dep-5cdb68cc76 (1/1 replicas created)
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  2m    deployment-controller  Scaled up replica set helloworld-dep-5cdb68cc76 to 1
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get rs
+NAME                        DESIRED   CURRENT   READY     AGE
+helloworld-dep-5cdb68cc76   1         1         1         3m
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods
+NAME                              READY     STATUS    RESTARTS   AGE
+helloworld-dep-5cdb68cc76-8v9xc   1/1       Running   0          3m
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl scale deploy helloworld-dep --replicas 5
+deployment "helloworld-dep" scaled
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get rs
+NAME                        DESIRED   CURRENT   READY     AGE
+helloworld-dep-5cdb68cc76   5         5         5         4m
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods
+NAME                              READY     STATUS    RESTARTS   AGE
+helloworld-dep-5cdb68cc76-4bls2   1/1       Running   0          21s
+helloworld-dep-5cdb68cc76-77lr2   1/1       Running   0          21s
+helloworld-dep-5cdb68cc76-8v9xc   1/1       Running   0          4m
+helloworld-dep-5cdb68cc76-gkvpr   1/1       Running   0          21s
+helloworld-dep-5cdb68cc76-jz6zj   1/1       Running   0          21s
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl scale deploy helloworld-dep --replicas 10
+deployment "helloworld-dep" scaled
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods
+NAME                              READY     STATUS    RESTARTS   AGE
+helloworld-dep-5cdb68cc76-4bls2   1/1       Running   0          1m
+helloworld-dep-5cdb68cc76-77lr2   1/1       Running   0          1m
+helloworld-dep-5cdb68cc76-7qfmg   1/1       Running   0          10s
+helloworld-dep-5cdb68cc76-8v9xc   1/1       Running   0          5m
+helloworld-dep-5cdb68cc76-gkvpr   1/1       Running   0          1m
+helloworld-dep-5cdb68cc76-jz6zj   1/1       Running   0          1m
+helloworld-dep-5cdb68cc76-nht74   1/1       Running   0          11s
+helloworld-dep-5cdb68cc76-q6p48   1/1       Running   0          11s
+helloworld-dep-5cdb68cc76-r4bp8   1/1       Running   0          10s
+helloworld-dep-5cdb68cc76-s7tjp   1/1       Running   0          11s
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ #kubectl apply -f dep/dep-helloworld.yml
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl rollout status deploy dep-helloworld
+Error from server (NotFound): deployments.extensions "dep-helloworld" not found
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl rollout status deploy helloworld-dep
+deployment "helloworld-dep" successfully rolled out
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl apply -f dep/dep-helloworld.yml
+Warning: kubectl apply should be used on resource created by either kubectl create --save-config or kubectl apply
+deployment "helloworld-dep" configured
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl delete -f dep/dep-helloworld.yml
+deployment "helloworld-dep" deleted
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods
+No resources found, use --show-all to see completed objects.
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl apply  -f dep/dep-helloworld.yml
+deployment "helloworld-dep" created
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl scale deploy helloworld-dep --replicas 10
+deployment "helloworld-dep" scaled
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl rollout status deploy helloworld-dep
+deployment "helloworld-dep" successfully rolled out
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl apply  -f dep/dep-helloworld.yml
+deployment "helloworld-dep" configured
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl rollout status deploy helloworld-dep
+Waiting for rollout to finish: 0 of 1 updated replicas are available...
+deployment "helloworld-dep" successfully rolled out
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods
+NAME                             READY     STATUS    RESTARTS   AGE
+helloworld-dep-6bbc9d5b5-nkmg4   1/1       Running   0          24s
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl apply -f dep/dep-helloworld.yml
+deployment "helloworld-dep" configured
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods
+NAME                             READY     STATUS              RESTARTS   AGE
+helloworld-dep-6bbc9d5b5-2hr78   0/1       ContainerCreating   0          5s
+helloworld-dep-6bbc9d5b5-4l65p   0/1       Pending             0          5s
+helloworld-dep-6bbc9d5b5-b8vss   0/1       Pending             0          5s
+helloworld-dep-6bbc9d5b5-fc2ww   0/1       ContainerCreating   0          5s
+helloworld-dep-6bbc9d5b5-nkmg4   1/1       Running             0          1m
+helloworld-dep-6bbc9d5b5-td6lt   0/1       ContainerCreating   0          5s
+helloworld-dep-6bbc9d5b5-v46s2   0/1       ContainerCreating   0          5s
+helloworld-dep-6bbc9d5b5-w7pft   0/1       ContainerCreating   0          5s
+helloworld-dep-6bbc9d5b5-xjt7x   0/1       ContainerCreating   0          5s
+helloworld-dep-6bbc9d5b5-zhvjd   0/1       ContainerCreating   0          5s
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods
+NAME                             READY     STATUS    RESTARTS   AGE
+helloworld-dep-6bbc9d5b5-2hr78   1/1       Running   0          26s
+helloworld-dep-6bbc9d5b5-4l65p   1/1       Running   0          26s
+helloworld-dep-6bbc9d5b5-b8vss   1/1       Running   0          26s
+helloworld-dep-6bbc9d5b5-fc2ww   1/1       Running   0          26s
+helloworld-dep-6bbc9d5b5-nkmg4   1/1       Running   0          1m
+helloworld-dep-6bbc9d5b5-td6lt   1/1       Running   0          26s
+helloworld-dep-6bbc9d5b5-v46s2   1/1       Running   0          26s
+helloworld-dep-6bbc9d5b5-w7pft   1/1       Running   0          26s
+helloworld-dep-6bbc9d5b5-xjt7x   1/1       Running   0          26s
+helloworld-dep-6bbc9d5b5-zhvjd   1/1       Running   0          26s
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ #kubectl apply -f dep/dep-helloworld.yml
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ #kubectl rollout status deploy helloworld-dep
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl apply -f dep/dep-helloworld.yml
+deployment "helloworld-dep" configured
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl rollout status deploy helloworld-dep
+Waiting for rollout to finish: 4 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 4 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 4 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 5 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 5 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 5 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 5 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 5 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 6 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 6 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 6 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 6 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 7 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 7 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 7 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 8 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 8 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 8 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 9 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 9 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 9 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 9 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 9 out of 10 new replicas have been updated...
+Waiting for rollout to finish: 1 old replicas are pending termination...
+Waiting for rollout to finish: 1 old replicas are pending termination...
+Waiting for rollout to finish: 1 old replicas are pending termination...
+Waiting for rollout to finish: 9 of 10 updated replicas are available...
+deployment "helloworld-dep" successfully rolled out
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods --show-labels
+NAME                              READY     STATUS    RESTARTS   AGE       LABELS
+helloworld-dep-5cdb68cc76-94glq   1/1       Running   0          59s       app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-bg6gf   1/1       Running   0          1m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-h6w9x   1/1       Running   0          1m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-k8zhk   1/1       Running   0          47s       app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-mkwjb   1/1       Running   0          53s       app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-nm62f   1/1       Running   0          41s       app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-ntgcb   1/1       Running   0          56s       app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-s4w76   1/1       Running   0          51s       app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-vrgs6   1/1       Running   0          44s       app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-xsljs   1/1       Running   0          1m        app=helloworld,pod-template-hash=1786247732
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl apply -f pod/pod-helloworld.yml
+pod "my-nginx" created
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods --show-labels
+NAME                              READY     STATUS    RESTARTS   AGE       LABELS
+helloworld-dep-5cdb68cc76-94glq   1/1       Running   0          1m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-bg6gf   1/1       Running   0          1m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-h6w9x   1/1       Running   0          1m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-k8zhk   1/1       Running   0          1m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-mkwjb   1/1       Running   0          1m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-nm62f   1/1       Running   0          1m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-ntgcb   1/1       Running   0          1m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-s4w76   1/1       Running   0          1m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-vrgs6   1/1       Running   0          1m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-xsljs   1/1       Running   0          1m        app=helloworld,pod-template-hash=1786247732
+my-nginx                          1/1       Running   0          11s       app=helloworld
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods --show-labels
+NAME                              READY     STATUS    RESTARTS   AGE       LABELS
+helloworld-dep-5cdb68cc76-94glq   1/1       Running   0          7m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-bg6gf   1/1       Running   0          7m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-h6w9x   1/1       Running   0          7m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-k8zhk   1/1       Running   0          7m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-mkwjb   1/1       Running   0          7m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-nm62f   1/1       Running   0          6m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-ntgcb   1/1       Running   0          7m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-s4w76   1/1       Running   0          7m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-vrgs6   1/1       Running   0          6m        app=helloworld,pod-template-hash=1786247732
+helloworld-dep-5cdb68cc76-xsljs   1/1       Running   0          7m        app=helloworld,pod-template-hash=1786247732
+my-nginx                          1/1       Running   0          5m        app=helloworld
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl scale deploy helloworld-dep --replicas 1
+deployment "helloworld-dep" scaled
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl apply -f service/svc-helloworld.yml
+service "hw-svc" created
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl describe svc hw-svc
+Name:                     hw-svc
+Namespace:                default
+Labels:                   <none>
+Annotations:              kubectl.kubernetes.io/last-applied-configuration={"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"hw-svc","namespace":"default"},"spec":{"ports":[{"nodePort":31001,"port":8888,...
+Selector:                 app=helloworld
+Type:                     NodePort
+IP:                       10.107.126.236
+Port:                     <unset>  8888/TCP
+TargetPort:               nginxport/TCP
+NodePort:                 <unset>  31001/TCP
+Endpoints:                172.17.0.19:80,172.17.0.9:80
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods -o wide
+NAME                              READY     STATUS    RESTARTS   AGE       IP            NODE
+helloworld-dep-5cdb68cc76-bg6gf   1/1       Running   0          19m       172.17.0.19   minikube
+my-nginx                          1/1       Running   0          17m       172.17.0.9    minikube
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl delete -f pod/pod-helloworld.yml
+pod "my-nginx" deleted
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl describe svc hw-svc
+Name:                     hw-svc
+Namespace:                default
+Labels:                   <none>
+Annotations:              kubectl.kubernetes.io/last-applied-configuration={"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"hw-svc","namespace":"default"},"spec":{"ports":[{"nodePort":31001,"port":8888,...
+Selector:                 app=helloworld
+Type:                     NodePort
+IP:                       10.107.126.236
+Port:                     <unset>  8888/TCP
+TargetPort:               nginxport/TCP
+NodePort:                 <unset>  31001/TCP
+Endpoints:                172.17.0.19:80
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods --show-labels -o wide
+NAME                              READY     STATUS    RESTARTS   AGE       IP            NODE
+    LABELS
+helloworld-dep-5cdb68cc76-bg6gf   1/1       Running   0          21m       172.17.0.19   minikube   app=helloworld,pod-template-hash=1786247732
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl delete -f dep/dep-helloworld.yml
+deployment "helloworld-dep" deleted
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods --show-labels -o wide
+No resources found, use --show-all to see completed objects.
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl describe svc hw-svc
+Name:                     hw-svc
+Namespace:                default
+Labels:                   <none>
+Annotations:              kubectl.kubernetes.io/last-applied-configuration={"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"hw-svc","namespace":"default"},"spec":{"ports":[{"nodePort":31001,"port":8888,...
+Selector:                 app=helloworld
+Type:                     NodePort
+IP:                       10.107.126.236
+Port:                     <unset>  8888/TCP
+TargetPort:               nginxport/TCP
+NodePort:                 <unset>  31001/TCP
+Endpoints:                <none>
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl apply -f dep/dep-helloworld.yml
+deployment "helloworld-dep" created
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl describe svc hw-svc
+Name:                     hw-svc
+Namespace:                default
+Labels:                   <none>
+Annotations:              kubectl.kubernetes.io/last-applied-configuration={"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"hw-svc","namespace":"default"},"spec":{"ports":[{"nodePort":31001,"port":8888,...
+Selector:                 app=helloworld
+Type:                     NodePort
+IP:                       10.107.126.236
+Port:                     <unset>  8888/TCP
+TargetPort:               nginxport/TCP
+NodePort:                 <unset>  31001/TCP
+Endpoints:                172.17.0.4:80
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl scale deploy helloworld-dep --replicas 2
+deployment "helloworld-dep" scaled
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl describe svc hw-svc
+Name:                     hw-svc
+Namespace:                default
+Labels:                   <none>
+Annotations:              kubectl.kubernetes.io/last-applied-configuration={"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"hw-svc","namespace":"default"},"spec":{"ports":[{"nodePort":31001,"port":8888,...
+Selector:                 app=helloworld
+Type:                     NodePort
+IP:                       10.107.126.236
+Port:                     <unset>  8888/TCP
+TargetPort:               nginxport/TCP
+NodePort:                 <unset>  31001/TCP
+Endpoints:                172.17.0.4:80,172.17.0.9:80
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods
+NAME                              READY     STATUS    RESTARTS   AGE
+helloworld-dep-5cdb68cc76-6gvh9   1/1       Running   0          1m
+helloworld-dep-5cdb68cc76-9z22w   1/1       Running   0          24m
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl scale deploy helloworld-dep --replicas 5
+deployment "helloworld-dep" scaled
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl describe svc hw-svc
+Name:                     hw-svc
+Namespace:                default
+Labels:                   <none>
+Annotations:              kubectl.kubernetes.io/last-applied-configuration={"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"hw-svc","namespace":"default"},"spec":{"ports":[{"nodePort":31001,"port":8888,...
+Selector:                 app=helloworld
+Type:                     NodePort
+IP:                       10.107.126.236
+Port:                     <unset>  8888/TCP
+TargetPort:               nginxport/TCP
+NodePort:                 <unset>  31001/TCP
+Endpoints:                172.17.0.4:80,172.17.0.9:80
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl describe svc hw-svc
+Name:                     hw-svc
+Namespace:                default
+Labels:                   <none>
+Annotations:              kubectl.kubernetes.io/last-applied-configuration={"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"hw-svc","namespace":"default"},"spec":{"ports":[{"nodePort":31001,"port":8888,...
+Selector:                 app=helloworld
+Type:                     NodePort
+IP:                       10.107.126.236
+Port:                     <unset>  8888/TCP
+TargetPort:               nginxport/TCP
+NodePort:                 <unset>  31001/TCP
+Endpoints:                172.17.0.11:80,172.17.0.15:80,172.17.0.17:80 + 2 more...
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get svc hw-svc
+NAME      TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+hw-svc    NodePort   10.107.126.236   <none>        8888:31001/TCP   47m
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl desribe svc hw-svc
+Error: unknown command "desribe" for "kubectl"
+
+Did you mean this?
+        describe
+
+Run 'kubectl --help' for usage.
+error: unknown command "desribe" for "kubectl"
+
+Did you mean this?
+        describe
+
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl describe svc hw-svc
+Name:                     hw-svc
+Namespace:                default
+Labels:                   <none>
+Annotations:              kubectl.kubernetes.io/last-applied-configuration={"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"hw-svc","namespace":"default"},"spec":{"ports":[{"nodePort":31001,"port":8888,...
+Selector:                 app=helloworld
+Type:                     NodePort
+IP:                       10.107.126.236
+Port:                     <unset>  8888/TCP
+TargetPort:               nginxport/TCP
+NodePort:                 <unset>  31001/TCP
+Endpoints:                172.17.0.11:80,172.17.0.15:80,172.17.0.17:80 + 2 more...
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl apply -f dep/dep-helloworld.yml
+deployment "helloworld-dep" configured
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods
+NAME                              READY     STATUS              RESTARTS   AGE
+helloworld-dep-54d74bd8cc-xlv7m   0/1       ContainerCreating   0          5s
+helloworld-dep-5cdb68cc76-6gvh9   1/1       Terminating         0          1h
+helloworld-dep-5cdb68cc76-95wrn   1/1       Terminating         0          1h
+helloworld-dep-5cdb68cc76-9z22w   1/1       Terminating         0          1h
+helloworld-dep-5cdb68cc76-cmdfz   1/1       Terminating         0          1h
+helloworld-dep-5cdb68cc76-d7zv9   1/1       Terminating         0          1h
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods
+NAME                              READY     STATUS              RESTARTS   AGE
+helloworld-dep-54d74bd8cc-xlv7m   0/1       ContainerCreating   0          14s
+helloworld-dep-5cdb68cc76-6gvh9   1/1       Terminating         0          1h
+helloworld-dep-5cdb68cc76-95wrn   0/1       Terminating         0          1h
+helloworld-dep-5cdb68cc76-9z22w   1/1       Terminating         0          1h
+helloworld-dep-5cdb68cc76-cmdfz   1/1       Terminating         0          1h
+helloworld-dep-5cdb68cc76-d7zv9   0/1       Terminating         0          1h
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl rollout status deploy helloworld-dep
+deployment "helloworld-dep" successfully rolled out
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods
+NAME                              READY     STATUS        RESTARTS   AGE
+helloworld-dep-54d74bd8cc-xlv7m   1/1       Running       0          27s
+helloworld-dep-5cdb68cc76-6gvh9   0/1       Terminating   0          1h
+helloworld-dep-5cdb68cc76-9z22w   0/1       Terminating   0          1h
+helloworld-dep-5cdb68cc76-cmdfz   0/1       Terminating   0          1h
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get svc hw-svc
+NAME      TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+hw-svc    NodePort   10.107.126.236   <none>        8888:31001/TCP   2h
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl scale deploy helloworld-dep --replicas 2
+deployment "helloworld-dep" scaled
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl describe svc hw-svc
+Name:                     hw-svc
+Namespace:                default
+Labels:                   <none>
+Annotations:              kubectl.kubernetes.io/last-applied-configuration={"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"hw-svc","namespace":"default"},"spec":{"ports":[{"nodePort":31001,"port":8888,...
+Selector:                 app=helloworld
+Type:                     NodePort
+IP:                       10.107.126.236
+Port:                     <unset>  8888/TCP
+TargetPort:               nginxport/TCP
+NodePort:                 <unset>  31001/TCP
+Endpoints:                172.17.0.11:80,172.17.0.4:80
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ curl 192.168.99.100:31001
+<html><body><h1>It works!</h1></body></html>
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ curl hw-svc:8888
+curl: (6) Could not resolve host: hw-svc
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods
+NAME                              READY     STATUS    RESTARTS   AGE
+helloworld-dep-54d74bd8cc-hz9sg   1/1       Running   0          10m
+helloworld-dep-54d74bd8cc-xlv7m   1/1       Running   0          13m
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl exec -it helloworld-dep-54d74bd8cc-hz9sg -- sh
+/ # ps
+PID   USER     TIME  COMMAND
+    1 root      0:00 httpd -D FOREGROUND
+    6 apache    0:00 httpd -D FOREGROUND
+    7 apache    0:00 httpd -D FOREGROUND
+    8 apache    0:00 httpd -D FOREGROUND
+    9 apache    0:00 httpd -D FOREGROUND
+   10 apache    0:00 httpd -D FOREGROUND
+   11 root      0:00 sh
+   16 root      0:00 ps
+/ # curl
+sh: curl: not found
+/ # apk add curl
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.9/main/x86_64/APKINDEX.tar.gz
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.9/community/x86_64/APKINDEX.tar.gz
+(1/5) Installing ca-certificates (20190108-r0)
+(2/5) Installing nghttp2-libs (1.35.1-r0)
+(3/5) Installing libssh2 (1.8.0-r4)
+(4/5) Installing libcurl (7.64.0-r1)
+(5/5) Installing curl (7.64.0-r1)
+Executing busybox-1.29.3-r10.trigger
+Executing ca-certificates-20190108-r0.trigger
+OK: 11 MiB in 25 packages
+/ #
+/ #
+/ #
+/ #
+/ # curl 192.168.99.100:31001
+<html><body><h1>It works!</h1></body></html>
+/ # curl localhost:80
+<html><body><h1>It works!</h1></body></html>
+/ # curl 10.107.126.236:8888
+<html><body><h1>It works!</h1></body></html>
+/ # curl 172.17.0.4:80
+<html><body><h1>It works!</h1></body></html>
+/ # curl hw-svc:8888
+<html><body><h1>It works!</h1></body></html>
+/ # cat /etc/resolv.conf
+nameserver 10.96.0.10
+search default.svc.cluster.local svc.cluster.local cluster.local
+options ndots:5
+/ # nslookup hw-svc
+nslookup: can't resolve '(null)': Name does not resolve
+
+Name:      hw-svc
+Address 1: 10.107.126.236 hw-svc.default.svc.cluster.local
+/ # curl hw-svc.default.svc.cluster.local:8888
+<html><body><h1>It works!</h1></body></html>
+/ # 10.96.0.10:q!
+sh: 10.96.0.10:q!: not found
+/ # exit
+command terminated with exit code 127
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods
+NAME                              READY     STATUS    RESTARTS   AGE
+helloworld-dep-54d74bd8cc-hz9sg   1/1       Running   0          32m
+helloworld-dep-54d74bd8cc-xlv7m   1/1       Running   0          35m
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl apply -f pod/pod-helloworld.yml
+pod "my-nginx" created
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl exec my-nginx -- cat /etc/resolv.conf
+cat: can't open 'E:/downloads/cmder/vendor/git-for-windows/etc/resolv.conf': No such file or directory
+command terminated with exit code 1
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl exec my-nginx -- sh
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl exec -it my-nginx -- sh
+/ # cat /etc/resolv.conf
+nameserver 10.96.0.10
+search default.svc.cluster.local svc.cluster.local cluster.local
+options ndots:5
+/ # exit
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get deploy
+NAME             DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+helloworld-dep   2         2         2            2           2h
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl delete deploy helloworld-dep
+deployment "helloworld-dep" deleted
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods
+NAME                              READY     STATUS        RESTARTS   AGE
+helloworld-dep-54d74bd8cc-hz9sg   0/1       Terminating   0          54m
+my-nginx                          1/1       Running       0          21m
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl delete pod my-nginx
+pod "my-nginx" deleted
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl delete svc hw-svc
+service "hw-svc" deleted
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl apply -f bl
+blog/
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl apply -f blog/db-dep.yml
+deployment "blog-db-dep" created
+service "blog-db-svc" created
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods
+NAME                           READY     STATUS    RESTARTS   AGE
+blog-db-dep-6955b8d844-4vbcz   1/1       Running   0          13s
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods -o wide
+NAME                           READY     STATUS    RESTARTS   AGE       IP           NODE
+blog-db-dep-6955b8d844-4vbcz   1/1       Running   0          34s       172.17.0.4   minikube
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl describe svc "blog-db-svc"
+Name:              blog-db-svc
+Namespace:         default
+Labels:            <none>
+Annotations:       kubectl.kubernetes.io/last-applied-configuration={"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"blog-db-svc","namespace":"default"},"spec":{"ports":[{"port":3306,"protocol":"...
+Selector:          app=blog-db
+Type:              ClusterIP
+IP:                10.99.79.89
+Port:              <unset>  3306/TCP
+TargetPort:        db-port/TCP
+Endpoints:         172.17.0.4:3306
+Session Affinity:  None
+Events:            <none>
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl create -f blog/ghost-dep.yml
+deployment "blog-ghost-dep" created
+service "blog-ghost-svc" created
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods
+NAME                              READY     STATUS              RESTARTS   AGE
+blog-db-dep-6955b8d844-4vbcz      1/1       Running             0          2m
+blog-ghost-dep-775d87f64c-5xvb8   0/1       ContainerCreating   0          6s
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods -o wide
+NAME                              READY     STATUS    RESTARTS   AGE       IP           NODE
+blog-db-dep-6955b8d844-4vbcz      1/1       Running   0          2m        172.17.0.4   minikube
+
+blog-ghost-dep-775d87f64c-5xvb8   1/1       Running   0          16s       172.17.0.9   minikube
+
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl describe svc blog-ghost-svc
+Name:                     blog-ghost-svc
+Namespace:                default
+Labels:                   <none>
+Annotations:              <none>
+Selector:                 app=blog-ghost
+Type:                     NodePort
+IP:                       10.96.14.252
+Port:                     <unset>  8888/TCP
+TargetPort:               ghost-port/TCP
+NodePort:                 <unset>  32005/TCP
+Endpoints:                172.17.0.9:2368
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ

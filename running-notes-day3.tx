@@ -1,0 +1,94 @@
+Dell lap@Dell ~/docker-workshop/us-mar11
+λ kubectl version
+Client Version: version.Info{Major:"1", Minor:"9", GitVersion:"v1.9.0", GitCommit:"925c127ec6b946659ad0fd596fa959be43f0cc05", GitTreeState:"clean", BuildDate:"2017-12-15T21:07:38Z", GoVersion:"go1.9.2", Compiler:"gc", Platform:"windows/amd64"}
+Server Version: version.Info{Major:"", Minor:"", GitVersion:"v1.9.0", GitCommit:"925c127ec6b946659ad0fd596fa959be43f0cc05", GitTreeState:"clean", BuildDate:"2018-01-26T19:04:38Z", GoVersion:"go1.9.1", Compiler:"gc", Platform:"linux/amd64"}
+Dell lap@Dell ~/docker-workshop/us-mar11
+λ kubectl config current-context
+minikube
+Dell lap@Dell ~/docker-workshop/us-mar11
+λ pwd
+/c/Users/Dell lap/docker-workshop/us-mar11
+Dell lap@Dell ~/docker-workshop/us-mar11
+λ ls
+alap/  k8s/  pinger/  product/
+Dell lap@Dell ~/docker-workshop/us-mar11
+λ git clone https://github.com/AdityaSP/ora-u
+k-mar11-dock-kube/
+Cloning into 'ora-uk-mar11-dock-kube'...
+remote: Enumerating objects: 56, done.
+remote: Counting objects: 100% (56/56), done.
+remote: Compressing objects: 100% (46/46), done.
+remote: Total 56 (delta 18), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (56/56), done.
+Dell lap@Dell ~/docker-workshop/us-mar11
+λ cd ora-uk-mar11-dock-kube/
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube (master)
+λ git pull
+Already up to date.
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube (master)
+λ
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube (master)
+λ cd k8s/
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ ls
+dep/  pod/  rc/  readme.md  service/
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ ls pod/pod-helloworld.yml
+pod/pod-helloworld.yml
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl apply -f pod/pod-helloworld.yml
+pod "my-nginx" created
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get pods
+NAME       READY     STATUS    RESTARTS   AGE
+my-nginx   1/1       Running   0          2m
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl describe pod my-nginx
+Name:         my-nginx
+Namespace:    default
+Node:         minikube/192.168.99.100
+Start Time:   Wed, 13 Mar 2019 20:50:03 +0530
+Labels:       app=helloworld
+Annotations:  kubectl.kubernetes.io/last-applied-configuration={"apiVersion":"v1","kind":"Pod","metadata":{"annotations":{},"labels":{"app":"helloworld"},"name":"my-nginx","namespace":"default"},"spec":{"containers...
+Status:       Running
+IP:           172.17.0.4
+Containers:
+  nginx:
+    Container ID:   docker://2447fb08a2e642095e1f6839b7f21a824d94946b95e377d1190a5d87af70d614
+    Image:          nginx:alpine
+    Image ID:       docker-pullable://nginx@sha256:55390addbb1a2b82e6ffabafd72e0f5dfbc8f86c2e7d9f41fb914cca537bd500
+    Port:           80/TCP
+    State:          Running
+      Started:      Wed, 13 Mar 2019 20:50:05 +0530
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-448nd (ro)
+Conditions:
+  Type           Status
+  Initialized    True
+  Ready          True
+  PodScheduled   True
+Volumes:
+  default-token-448nd:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-448nd
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     <none>
+Events:
+  Type    Reason                 Age   From               Message
+  ----    ------                 ----  ----               -------
+  Normal  Scheduled              3m    default-scheduler  Successfully assigned my-nginx to minikube
+  Normal  SuccessfulMountVolume  3m    kubelet, minikube  MountVolume.SetUp succeeded for volume "default-token-448nd"
+  Normal  Pulled                 3m    kubelet, minikube  Container image "nginx:alpine" already present on machine
+  Normal  Created                3m    kubelet, minikube  Created container
+  Normal  Started                3m    kubelet, minikube  Started container
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ kubectl get po
+NAME       READY     STATUS    RESTARTS   AGE
+my-nginx   1/1       Running   0          14m
+Dell lap@Dell ~/docker-workshop/us-mar11/ora-uk-mar11-dock-kube/k8s (master)
+λ
